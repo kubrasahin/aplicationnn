@@ -140,7 +140,7 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
             ? const Center(child: CircularProgressIndicator())
             : Form(
                 key: _formKey,
-                child: Column(
+                child: ListView(
                   children: [
                     Padding(
                         padding: const EdgeInsets.all(8.0),

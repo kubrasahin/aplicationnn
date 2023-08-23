@@ -79,11 +79,17 @@ class _ProductCardState extends State<ProductCard> {
                                   ),
                                 )),
                           ),
-                          AutoSizeText(
-                            widget.productData!["companyName"],
-                            style: TextStyle(
-                              color: Color(0xffffffff),
-                              fontWeight: FontWeight.w700,
+                          Container(
+                            width: 100,
+                            child: FittedBox(
+                               fit: BoxFit.scaleDown,
+                              child: AutoSizeText(
+                                widget.productData!["companyName"],
+                                style: TextStyle(
+                                  color: Color(0xffffffff),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
                           ),
                         ],

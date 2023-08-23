@@ -315,12 +315,18 @@ class _StoreScreenState extends State<StoreScreen> {
                                                         ),
                                                       )),
                                                 ),
-                                                AutoSizeText(
-                                                  productList![index]
-                                                      ["companyName"],
-                                                  style: TextStyle(
-                                                    color: Color(0xffffffff),
-                                                    fontWeight: FontWeight.w700,
+                                                Container(
+                                                  width: 100,
+                                                  child: FittedBox(
+                                                     fit: BoxFit.fill,
+                                                    child: AutoSizeText(
+                                                      productList![index]
+                                                          ["companyName"],
+                                                      style: TextStyle(
+                                                        color: Color(0xffffffff),
+                                                        fontWeight: FontWeight.w700,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -358,19 +364,23 @@ class _StoreScreenState extends State<StoreScreen> {
                                                           BorderRadius.circular(
                                                               10),
                                                       color: Color(0xffffffff)),
-                                                  child: Text(
-                                                    productList![index]
-                                                                ["productStock"]
-                                                            .toString() +
-                                                        '  ' +
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .piece,
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: Color(0xff2b2e83),
-                                                      fontWeight:
-                                                          FontWeight.w700,
+                                                  child: FittedBox(
+                                                     fit: BoxFit.scaleDown,
+                                                    child: AutoSizeText(
+                                                      maxLines: 2,
+                                                      productList![index]
+                                                                  ["productStock"]
+                                                              .toString() +
+                                                          '  ' +
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .piece,
+                                                      style: TextStyle(
+                                                        fontSize: 17,
+                                                        color: Color(0xff2b2e83),
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),

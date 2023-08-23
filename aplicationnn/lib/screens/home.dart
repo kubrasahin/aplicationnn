@@ -145,6 +145,7 @@ class _HomeeScreenState extends State<HomeeScreen>
       )
     ];
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: screens[currentIndex!],
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,

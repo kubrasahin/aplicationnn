@@ -252,7 +252,7 @@ class _AskimScreenState extends State<AskimScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
                                   child: CircleAvatar(
                                     backgroundColor: Color(0xffffffff),
                                     radius: 25,

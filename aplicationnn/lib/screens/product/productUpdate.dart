@@ -1,8 +1,13 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:aplicationnn/screens/home.dart';
 import 'package:aplicationnn/screens/product/updatePhotoProduct.dart';
 import 'package:aplicationnn/services/productService.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../services/categoryService.dart';
@@ -20,7 +25,7 @@ class ProductUpdate extends StatefulWidget {
 
 class _ProductUpdateState extends State<ProductUpdate> {
   final _formKey = GlobalKey<FormState>();
-  String? title, description, size, category, subcategory, stock;
+  String? title, description, size, category, subcategory, stock, keyword;
   int? valcategory, selectedIndex;
   bool isProductLoading = false, isCategoryLoading = false;
   static var productDetail;
@@ -28,6 +33,8 @@ class _ProductUpdateState extends State<ProductUpdate> {
   int _selectedIndex = 0;
   String url = "http://185.88.175.96";
 
+  XFile? image;
+  String selectedFileName = '';
   get id => widget.productId;
 
   _onSelected(int index) {
@@ -105,9 +112,10 @@ class _ProductUpdateState extends State<ProductUpdate> {
         "description": description,
         "categoryId": categoryList![valcategory!]["id"].toString(),
         "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
-        "imageUrl": subCategoryList![_selectedIndex]["imageUrl"],
         "categoryName": categoryList![valcategory!]["title"],
         "subCategoryName": subCategoryList![_selectedIndex]["title"],
+        "productStock": stock.toString(),
+        "keyWords": keyword.toString(),
       };
       SharedPreferences basicAuth = await SharedPreferences.getInstance();
       String? basic = basicAuth.getString('basic');
@@ -124,42 +132,107 @@ class _ProductUpdateState extends State<ProductUpdate> {
           body: jsonEncode(body));
       var response = json.encode(res.body);
       if (res.statusCode == 200) {
-        showSnackbar(AppLocalizations.of(context)!.theProductHasBeenUpdated);
-      } else {
-        showSnackbar(AppLocalizations.of(context)!.errorOccurredOnUpdate);
-      }
-    }
-  }
-
-  void showSnackbar(message) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              message,
-            ),
-            actions: <Widget>[
-              Container(
-                color: const Color.fromARGB(255, 230, 36, 102),
-                child: TextButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
+        showMessageInScaffoldTwo(AppLocalizations.of(context)!.theProductHasBeenUpdated);
+        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => HomeeScreen(
                                     currentIndex: 3,
                                   )));
-                    },
-                    child: Text(AppLocalizations.of(context)!.close)),
-              )
-            ],
-          );
+      } else {
+        showMessageInScaffoldTwo(AppLocalizations.of(context)!.errorOccurredOnUpdate);
+        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeeScreen(
+                                    currentIndex: 3,
+                                  )));
+      }
+    }
+  }
+
+   updateProducttt() async {
+    final form = _formKey.currentState!;
+    if (_formKey.currentState!.validate()) {
+      form.save();
+
+      SharedPreferences token = await SharedPreferences.getInstance();
+      String? tokenn = token.getString('token');
+      SharedPreferences basicAuth = await SharedPreferences.getInstance();
+      String? basic = basicAuth.getString('basic');
+      print(tokenn);
+      var headers = {
+        'Content-Type': 'multipart/form-data; charset=UTF-8',
+        'Authorization': basic!,
+      };
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse("http://185.88.175.96/rest/product-create"),
+      );
+      /* SharedPreferences token = await SharedPreferences.getInstance();
+      String? tokenn = token.getString('token');
+      var headers = {
+        'Authorization': 'Bearer' + tokenn!,
+      };*/
+
+      Map<String, dynamic> body = {
+        "title": title.toString(),
+        "description": description.toString(),
+        "categoryId": categoryList![valcategory!]["id"].toString(),
+        "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
+        "categoryName": categoryList![valcategory!]["title"].toString(),
+        "subCategoryName": subCategoryList![_selectedIndex]["title"].toString(),
+        "productStock": stock.toString(),
+        "keyWords": keyword.toString(),
+      };
+
+      Map<String, String> obj = {"product": json.encode(body).toString()};
+      //var obj = {"product": body.toString()};
+
+      request.fields.addAll(obj);
+      request.headers.addAll(headers);
+      Uint8List data = await this.image!.readAsBytes();
+      List<int> list = data.cast();
+      print(list);
+      var multipartFile =
+          http.MultipartFile.fromBytes('file', list, filename: image!.path);
+      request.files.add(multipartFile);
+      print(image!.path);
+      print(body);
+      print(obj);
+      var response = await request.send();
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        showMessageInScaffoldTwo(
+            AppLocalizations.of(context)!.yourProductSharingWasSuccessful);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeeScreen(
+                      currentIndex: 3,
+                    )));
+      } else {
+        showMessageInScaffoldTwo(AppLocalizations.of(context)!.error);
+      }
+    }
+  }
+
+  PickImage(ImageSource source) async {
+    try {
+      image = await ImagePicker().pickImage(
+        source: source,
+      );
+      if (image != null) {
+        setState(() {
+          selectedFileName = image!.path;
+          print(image!.name);
         });
+      }
+      ;
+
+      final imageTempo = File(image!.path);
+      // setState(() => this.image = imageTempo as XFile?);
+    } on PlatformException catch (e) {}
   }
 
   deleteProduct() async {
@@ -178,12 +251,34 @@ class _ProductUpdateState extends State<ProductUpdate> {
     );
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
-      showSnackbar(AppLocalizations.of(context)!.deleteProduct);
+      showMessageInScaffoldTwo(AppLocalizations.of(context)!.deleteProduct);
+      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeeScreen(
+                                    currentIndex: 3,
+                                  )));
     } else {
-      showSnackbar(AppLocalizations.of(context)!.theProductCouldNotBeDeleted);
+      showMessageInScaffoldTwo(AppLocalizations.of(context)!.theProductCouldNotBeDeleted);
+
     }
   }
 
+void showMessageInScaffoldTwo(messagee) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      elevation: 6.0,
+      backgroundColor: Color(0xffef6328),
+      behavior: SnackBarBehavior.floating,
+      content: Text(
+        messagee,
+        style: TextStyle(color: Colors.white),
+      ),
+      action: SnackBarAction(
+          textColor: Color(0xffffffff),
+          label: AppLocalizations.of(context)!.close,
+          onPressed: () {}),
+    ));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,21 +320,96 @@ class _ProductUpdateState extends State<ProductUpdate> {
                         padding: const EdgeInsets.all(8.0),
                         child: ListView(
                           children: [
-                            Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text(
-                                  AppLocalizations.of(context)!.productUpdate,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
+                            productDetail["imageUrl"] != null
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.9),
+                                        borderRadius:
+                                            BorderRadius.circular(20), image: DecorationImage(image: NetworkImage(productDetail["imageUrl"]), fit: BoxFit.cover)),
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.shade500,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                PickImage(ImageSource.gallery);
+                                              },
+                                              icon: Icon(Icons.camera_alt),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              )
+                              
+                            : Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.9),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.shade500,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                PickImage(ImageSource.gallery);
+                                              },
+                                              icon: Icon(Icons.camera_alt),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                               ),
-                            ),
+                              SizedBox(height: 20,),
                             Container(
                               width: MediaQuery.of(context).size.width / 1.5,
-                              child: TextFormField(
+                              child:productDetail["title"] == null? TextFormField(
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                  maxLength: 50,
+                                  onSaved: (String? value) {
+                                    title = value;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                       border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                      hintStyle: TextStyle(color: Color(0xffffffff)),
+                                      errorStyle:
+                                          TextStyle(color: Color(0xffffffff)),
+                                      // ignore: prefer_const_constructors
+
+                                      contentPadding: EdgeInsets.all(15.0),
+                                      
+                                )) : TextFormField(
                                 style: TextStyle(color: Color(0xffffffff)),
                                 key: Key(productDetail["title"]),
                                 initialValue: productDetail["title"],
@@ -251,13 +421,32 @@ class _ProductUpdateState extends State<ProductUpdate> {
                                   hintText: AppLocalizations.of(context)!
                                       .enterProductName,
                                 ),
-                              ),
+                              )
                             ),
                             const Divider( color: Color(0xffffffff),),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 1.5,
-                              child: TextFormField(
-                                style:   TextStyle(color: Color(0xffffffff)),
+                            Container(
+                               width: MediaQuery.of(context).size.width / 1.5,
+                              child:productDetail["description"] == null
+                              ? TextFormField(
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                  maxLength: 50,
+                                  onSaved: (String? value) {
+                                    description = value;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                       border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                      hintStyle: TextStyle(color: Color(0xffffffff)),
+                                      errorStyle:
+                                          TextStyle(color: Color(0xffffffff)),
+                                      // ignore: prefer_const_constructors
+
+                                      contentPadding: EdgeInsets.all(15.0),
+                                      
+                                )): TextFormField(
+                                style: TextStyle(color: Color(0xffffffff)),
                                 key: Key(productDetail["description"]),
                                 initialValue: productDetail["description"],
                                 onSaved: (String? value) {
@@ -266,22 +455,127 @@ class _ProductUpdateState extends State<ProductUpdate> {
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: AppLocalizations.of(context)!
-                                      .descriptionProduct,
+                                      .enterProductName,
                                 ),
-                              ),
+                              )
+                              
                             ),
+                             
                             const Divider( color: Color(0xffffffff),),
-                           
-                            const Divider(),
-                            
-                           const Divider( color: Color(0xffffffff),),
+                            Container(
+                               width: MediaQuery.of(context).size.width / 1.5,
+                              child:productDetail["keyWords"] == null
+                              ? TextFormField(
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                  maxLength: 50,
+                                  onSaved: (String? value) {
+                                    keyword = value;
+                                  },
+                                  
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                       border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                      hintStyle: TextStyle(color: Color(0xffffffff)),
+                                      errorStyle:
+                                          TextStyle(color: Color(0xffffffff)),
+                                      // ignore: prefer_const_constructors
+
+                                      contentPadding: EdgeInsets.all(15.0),
+                                      
+                                )): TextFormField(
+                                style: TextStyle(color: Color(0xffffffff)),
+                                key: Key(productDetail["keyWords"]),
+                                initialValue: productDetail["keyWords"],
+                                onSaved: (String? value) {
+                                  keyword = value;
+                                },
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                ),
+                              )
+                              
+                            ),
+                             const Divider( color: Color(0xffffffff),),
+                            Container(
+                               width: MediaQuery.of(context).size.width / 1.5,
+                              child:productDetail["stock"] == null
+                              ? TextFormField(
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                  maxLength: 50,
+                                  onSaved: (String? value) {
+                                    stock = value;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                       border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                      hintStyle: TextStyle(color: Color(0xffffffff)),
+                                      errorStyle:
+                                          TextStyle(color: Color(0xffffffff)),
+                                      // ignore: prefer_const_constructors
+
+                                      contentPadding: EdgeInsets.all(15.0),
+                                      
+                                )): TextFormField(
+                                style: TextStyle(color: Color(0xffffffff)),
+                                key: Key(productDetail["stock"]),
+                                initialValue: productDetail["stock"],
+                                onSaved: (String? value) {
+                                  stock = value;
+                                },
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                ),
+                              )
+                              
+                            ),
+                             const Divider( color: Color(0xffffffff),),
+                              Container(
+                               width: MediaQuery.of(context).size.width / 1.5,
+                              child:productDetail["size"] == null
+                              ? TextFormField(
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                  maxLength: 50,
+                                  onSaved: (String? value) {
+                                    size = value;
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  decoration: InputDecoration(
+                                       border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                      hintStyle: TextStyle(color: Color(0xffffffff)),
+                                      errorStyle:
+                                          TextStyle(color: Color(0xffffffff)),
+                                      // ignore: prefer_const_constructors
+
+                                      contentPadding: EdgeInsets.all(15.0),
+                                      
+                                )): TextFormField(
+                                style: TextStyle(color: Color(0xffffffff)),
+                                key: Key(productDetail["size"]),
+                                initialValue: productDetail["size"],
+                                onSaved: (String? value) {
+                                  stock = value;
+                                },
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                ),
+                              )
+                              
+                            ),
+                                         const Divider( color: Color(0xffffffff),),         
                             buildDropField(),
-                            const Divider(),
-                          ],
-                        ),
-                      )),
-                ),
-                Align(
+                            Align(
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -330,36 +624,15 @@ class _ProductUpdateState extends State<ProductUpdate> {
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductPhotoAdd(
-                                        productId: widget.productId,
-                                      )));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 60,
-                            width: 100,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),  color: Color(0xffef6328),),
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(
-                                  child: Text(
-                                AppLocalizations.of(context)!.photoAttachments,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                              )),
-                            ),
-                          ),
-                        ),
-                      ),
+                     
                     ],
                   ),
                 )
+                          ],
+                        ),
+                      )),
+                ),
+                
               ],
             ),
     );
@@ -434,7 +707,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
               itemCount: subCategoryList!.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: GestureDetector(
                     onTap: () => _onSelected(index),
                     child: Container(
