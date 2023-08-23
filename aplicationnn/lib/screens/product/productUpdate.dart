@@ -426,7 +426,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
 
   Widget subCategoriWidget() {
     return  SizedBox(
-          height: 50,
+          height: 60,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: ScrollPhysics(),
