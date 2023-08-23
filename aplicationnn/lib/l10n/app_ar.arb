@@ -1,0 +1,24 @@
+{
+    "name": "اسم",
+   "surname": "لقب",
+   "email": "البريد الإلكتروني",
+   "phoneNumber": "هاتف محمول",
+   "gender": "جنس",
+   "password":"كلمه السر",
+    "close": "أغلق",
+   "register": "تسجيل",
+   "enterYourName":"أدخل أسمك",
+    "enterYourLastname":"أدخل اسمك الأخير",
+     "enterYourEmail":"أدخل بريدك الإلكتروني",
+    "enterYourPhoneNumber":"أدخل رقم هاتفك",
+    "enterYourPassword":"ادخل رقمك السريd",
+    "woman":"النساء",
+    "male":"ذكر",
+    "login":"تسجيل الدخول",
+    "notPhoneNumber":"طول رقم هاتفك غير صحيح",
+    "myHanger":"شماعات بلدي",
+    "home":"الصفحة الرئيسية",
+    "category":"الفئة"
+
+
+}
