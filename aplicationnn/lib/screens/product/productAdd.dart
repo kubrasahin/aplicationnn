@@ -88,7 +88,7 @@ class _ProductAddState extends State<ProductAdd> {
       print(tokenn);
       var headers = {
         'Content-Type': 'multipart/form-data; charset=UTF-8',
-        'Authorization': basic!,
+        'Authorization': 'Bearer' + tokenn!,
       };
       var request = http.MultipartRequest(
         'POST',
@@ -498,7 +498,7 @@ class _ProductAddState extends State<ProductAdd> {
                               keyboardType: TextInputType.number,
                               validator: (String? value) {
                                 if (value!.isEmpty) {
-                                  return AppLocalizations.of(context)!
+                                  return  AppLocalizations.of(context)!
                                       .inventoryOfProduct;
                                 } else {
                                   return null;

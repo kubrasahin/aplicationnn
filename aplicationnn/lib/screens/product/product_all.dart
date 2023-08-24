@@ -182,7 +182,7 @@ class _ProductAllState extends State<ProductAll> {
                     child: ListView.builder(
                         shrinkWrap: true,
                         itemCount: productsList!.length,
-                        itemBuilder: (context, i) {
+                        itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: InkWell(
@@ -191,11 +191,11 @@ class _ProductAllState extends State<ProductAll> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => ProductDeal(
-                                              productID: productsList![i]
+                                              productID: productsList![index]
                                                   ['id'])));
                                 },
                                 child: ProductCard(
-                                  productData: productsList![i],
+                                  productData: productsList![index],
                                 )),
                           );
                         }),

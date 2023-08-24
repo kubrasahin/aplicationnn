@@ -103,53 +103,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
     });
   }
 
-  updateProduct() async {
-    final form = _formKey.currentState!;
-    if (_formKey.currentState!.validate()) {
-      form.save();
-      Map<String, dynamic> body = {
-        "title": title,
-        "description": description,
-        "categoryId": categoryList![valcategory!]["id"].toString(),
-        "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
-        "categoryName": categoryList![valcategory!]["title"],
-        "subCategoryName": subCategoryList![_selectedIndex]["title"],
-        "productStock": stock.toString(),
-        "keyWords": keyword.toString(),
-      };
-      SharedPreferences basicAuth = await SharedPreferences.getInstance();
-      String? basic = basicAuth.getString('basic');
-      SharedPreferences token = await SharedPreferences.getInstance();
-      String? tokenn = token.getString('token');
-      var res = await http.put(Uri.parse(url + "/rest/product-update/$id"),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Accept': 'application/json',
-            "Access-Control-Allow-Headers":
-                "Access-Control-Allow-Origin, Accept",
-            'Authorization': 'Bearer' + tokenn!,
-          },
-          body: jsonEncode(body));
-      var response = json.encode(res.body);
-      if (res.statusCode == 200) {
-        showMessageInScaffoldTwo(AppLocalizations.of(context)!.theProductHasBeenUpdated);
-        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeeScreen(
-                                    currentIndex: 3,
-                                  )));
-      } else {
-        showMessageInScaffoldTwo(AppLocalizations.of(context)!.errorOccurredOnUpdate);
-        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeeScreen(
-                                    currentIndex: 3,
-                                  )));
-      }
-    }
-  }
+   
 
    updateProducttt() async {
     final form = _formKey.currentState!;
@@ -163,11 +117,11 @@ class _ProductUpdateState extends State<ProductUpdate> {
       print(tokenn);
       var headers = {
         'Content-Type': 'multipart/form-data; charset=UTF-8',
-        'Authorization': basic!,
+        'Authorization': 'Bearer' + tokenn!,
       };
       var request = http.MultipartRequest(
-        'POST',
-        Uri.parse("http://185.88.175.96/rest/product-create"),
+        'PUT',
+        Uri.parse(url + "/rest/product-update/$id"),
       );
       /* SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
@@ -178,33 +132,37 @@ class _ProductUpdateState extends State<ProductUpdate> {
       Map<String, dynamic> body = {
         "title": title.toString(),
         "description": description.toString(),
-        "categoryId": categoryList![valcategory!]["id"].toString(),
-        "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
-        "categoryName": categoryList![valcategory!]["title"].toString(),
-        "subCategoryName": subCategoryList![_selectedIndex]["title"].toString(),
+        "categoryId": valcategory==null? productDetail["categoryId"].toString(): categoryList![valcategory!]["id"].toString(),
+        "subCategoryId": _selectedIndex==null? productDetail["subCategoryId"].toString() :subCategoryList![_selectedIndex]["id"].toString(),
+        "categoryName":valcategory==null? productDetail["categoryName"].toString(): categoryList![valcategory!]["title"].toString(),
+        "subCategoryName":  _selectedIndex != null? productDetail["subCategoryName"].toString() :subCategoryList![_selectedIndex]["title"].toString(),
         "productStock": stock.toString(),
         "keyWords": keyword.toString(),
       };
 
       Map<String, String> obj = {"product": json.encode(body).toString()};
-      //var obj = {"product": body.toString()};
 
       request.fields.addAll(obj);
       request.headers.addAll(headers);
-      Uint8List data = await this.image!.readAsBytes();
+
+      if( image!= null){
+       Uint8List data = await this.image!.readAsBytes();
       List<int> list = data.cast();
-      print(list);
       var multipartFile =
           http.MultipartFile.fromBytes('file', list, filename: image!.path);
       request.files.add(multipartFile);
-      print(image!.path);
-      print(body);
-      print(obj);
+      } else{
+         var emptyData = Uint8List(0);
+        var multipartFile =
+          http.MultipartFile.fromBytes('file' , emptyData, filename:'' );
+      request.files.add(multipartFile);
+      }
+
       var response = await request.send();
       print(response.statusCode);
       if (response.statusCode == 200) {
         showMessageInScaffoldTwo(
-            AppLocalizations.of(context)!.yourProductSharingWasSuccessful);
+            AppLocalizations.of(context)!.theProductHasBeenUpdated);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -212,7 +170,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
                       currentIndex: 3,
                     )));
       } else {
-        showMessageInScaffoldTwo(AppLocalizations.of(context)!.error);
+        showMessageInScaffoldTwo(AppLocalizations.of(context)!.errorOccurredOnUpdate);
       }
     }
   }
@@ -226,15 +184,49 @@ class _ProductUpdateState extends State<ProductUpdate> {
         setState(() {
           selectedFileName = image!.path;
           print(image!.name);
+          print("++++++++++++");
+          print(image);
         });
-      }
-      ;
+      };
 
       final imageTempo = File(image!.path);
       // setState(() => this.image = imageTempo as XFile?);
-    } on PlatformException catch (e) {}
+    } on PlatformException catch (e) {
+    image= productDetail["imageUrl"];
+        print(image);
+    }
   }
+  imageSave() async {
+    SharedPreferences basicAuth = await SharedPreferences.getInstance();
+    String? basic = basicAuth.getString('basic');
 
+    var headers = {
+      'Authorization': basic!,
+    };
+
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse("http://185.88.175.96/rest/product-uploadImage/$id"),
+    );
+    request.headers.addAll(headers);
+    Uint8List data = await this.image!.readAsBytes();
+    List<int> list = data.cast();
+
+    var multipartFile =
+        http.MultipartFile.fromBytes('file', list, filename: "myProfil.png");
+    request.files.add(multipartFile);
+
+    var response = await request.send();
+    print(response);
+    if (response.statusCode == 200) {
+      showMessageInScaffoldTwo(AppLocalizations.of(context)!.photoSave);
+      getProductDetail();
+      
+    } else {
+      showMessageInScaffoldTwo(AppLocalizations.of(context)!.errorOccurredOnUpdate);
+     
+    }
+  }
   deleteProduct() async {
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
     String? basic = basicAuth.getString('basic');
@@ -329,7 +321,7 @@ void showMessageInScaffoldTwo(messagee) {
                                     decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.9),
                                         borderRadius:
-                                            BorderRadius.circular(20), image: DecorationImage(image: NetworkImage(productDetail["imageUrl"]), fit: BoxFit.cover)),
+                                            BorderRadius.circular(20), image: DecorationImage(image: NetworkImage( productDetail["imageUrl"]), fit: BoxFit.cover)),
                                     child: Stack(
                                       children: [
                                         Positioned(
@@ -388,6 +380,7 @@ void showMessageInScaffoldTwo(messagee) {
                                       ],
                                     )),
                               ),
+                            
                               SizedBox(height: 20,),
                             Container(
                               width: MediaQuery.of(context).size.width / 1.5,
@@ -437,7 +430,7 @@ void showMessageInScaffoldTwo(messagee) {
                                   decoration: InputDecoration(
                                        border: InputBorder.none,
                                   hintText: AppLocalizations.of(context)!
-                                      .enterProductName,
+                                      .descriptionProduct,
                                       hintStyle: TextStyle(color: Color(0xffffffff)),
                                       errorStyle:
                                           TextStyle(color: Color(0xffffffff)),
@@ -460,6 +453,7 @@ void showMessageInScaffoldTwo(messagee) {
                               )
                               
                             ),
+
                              
                             const Divider( color: Color(0xffffffff),),
                             Container(
@@ -476,7 +470,7 @@ void showMessageInScaffoldTwo(messagee) {
                                   decoration: InputDecoration(
                                        border: InputBorder.none,
                                   hintText: AppLocalizations.of(context)!
-                                      .enterProductName,
+                                      .enterAKeywordForTheProduct,
                                       hintStyle: TextStyle(color: Color(0xffffffff)),
                                       errorStyle:
                                           TextStyle(color: Color(0xffffffff)),
@@ -502,7 +496,7 @@ void showMessageInScaffoldTwo(messagee) {
                              const Divider( color: Color(0xffffffff),),
                             Container(
                                width: MediaQuery.of(context).size.width / 1.5,
-                              child:productDetail["stock"] == null
+                              child:productDetail["productStock"] == null
                               ? TextFormField(
                                   style: TextStyle(color: Color(0xffffffff)),
                                   maxLength: 50,
@@ -513,7 +507,7 @@ void showMessageInScaffoldTwo(messagee) {
                                   decoration: InputDecoration(
                                        border: InputBorder.none,
                                   hintText: AppLocalizations.of(context)!
-                                      .enterProductName,
+                                      .inventoryOfProduct,
                                       hintStyle: TextStyle(color: Color(0xffffffff)),
                                       errorStyle:
                                           TextStyle(color: Color(0xffffffff)),
@@ -523,8 +517,8 @@ void showMessageInScaffoldTwo(messagee) {
                                       
                                 )): TextFormField(
                                 style: TextStyle(color: Color(0xffffffff)),
-                                key: Key(productDetail["stock"]),
-                                initialValue: productDetail["stock"],
+                                key: Key(productDetail["productStock"].toString()),
+                                initialValue: productDetail["productStock"].toString(),
                                 onSaved: (String? value) {
                                   stock = value;
                                 },
@@ -536,43 +530,7 @@ void showMessageInScaffoldTwo(messagee) {
                               )
                               
                             ),
-                             const Divider( color: Color(0xffffffff),),
-                              Container(
-                               width: MediaQuery.of(context).size.width / 1.5,
-                              child:productDetail["size"] == null
-                              ? TextFormField(
-                                  style: TextStyle(color: Color(0xffffffff)),
-                                  maxLength: 50,
-                                  onSaved: (String? value) {
-                                    size = value;
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                       border: InputBorder.none,
-                                  hintText: AppLocalizations.of(context)!
-                                      .enterProductName,
-                                      hintStyle: TextStyle(color: Color(0xffffffff)),
-                                      errorStyle:
-                                          TextStyle(color: Color(0xffffffff)),
-                                      // ignore: prefer_const_constructors
-
-                                      contentPadding: EdgeInsets.all(15.0),
-                                      
-                                )): TextFormField(
-                                style: TextStyle(color: Color(0xffffffff)),
-                                key: Key(productDetail["size"]),
-                                initialValue: productDetail["size"],
-                                onSaved: (String? value) {
-                                  stock = value;
-                                },
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: AppLocalizations.of(context)!
-                                      .enterProductName,
-                                ),
-                              )
-                              
-                            ),
+                            
                                          const Divider( color: Color(0xffffffff),),         
                             buildDropField(),
                             Align(
@@ -582,7 +540,7 @@ void showMessageInScaffoldTwo(messagee) {
                     children: [
                       InkWell(
                         onTap: () {
-                          updateProduct();
+                          updateProducttt();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -680,8 +638,7 @@ void showMessageInScaffoldTwo(messagee) {
                       borderRadius: BorderRadius.circular(5)),
                   padding: const EdgeInsets.all(10),
                   child: valcategory == null
-                      ? Text(AppLocalizations.of(context)!
-                          .selectTheCategoryOfTheProduct, style: const TextStyle(
+                      ? Text( productDetail["categoryName"], style: const TextStyle(
                               color: Color(0xffffffff), fontSize: 16),)
                       : Text(
                           categoryList![valcategory!]["title"], style: const TextStyle(
@@ -691,7 +648,7 @@ void showMessageInScaffoldTwo(messagee) {
         subCategoryList == null
             ? Container()
             : valcategory == null
-                ? Container()
+                ? subCategoriWidget()
                 : subCategoriWidget(),
       ],
     );

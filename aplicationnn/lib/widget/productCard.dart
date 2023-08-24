@@ -1,4 +1,5 @@
 import 'package:aplicationnn/services/productService.dart';
+import 'package:aplicationnn/services/userService.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,6 +21,48 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+ bool isProfilDetail = false,
+      isFollowing = false,
+      isAddFollowing = false,
+      isProductLoading = false;
+  var UserDetail, following, addFollowing;
+   
+  getFollowingg() async {
+    await UserService.following(widget.productData!['companyId']).then((value) {
+      if (mounted) {
+        setState(() {
+          following = value;
+          print(following);
+          isFollowing = true;
+        });
+      }
+    }).catchError((error) {
+      if (mounted) {
+        setState(() {
+          isFollowing = false;
+        });
+      }
+    });
+  }
+
+  AddFollowingg() async {
+    await UserService.addFollowing(widget.productData!['companyId']).then((value) {
+      if (mounted) {
+        setState(() {
+          addFollowing = value;
+          print(addFollowing);
+          isAddFollowing = true;
+          getFollowingg();
+        });
+      }
+    }).catchError((error) {
+      if (mounted) {
+        setState(() {
+          isAddFollowing = false;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +210,7 @@ class _ProductCardState extends State<ProductCard> {
                   ],
                 ),
               ),
+              following==false?
               Container(
                   decoration: BoxDecoration(
                       color: Color(0xffffffff),
@@ -175,18 +219,23 @@ class _ProductCardState extends State<ProductCard> {
                     alignment: Alignment.center,
                     clipBehavior: Clip.none,
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        margin: EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xffffffff)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            "Takip Et",
-                            style: TextStyle(
-                              color: Color(0xff2b2e83),
+                      InkWell(
+                        onTap: () {
+                       AddFollowingg();
+                    },
+                        child: Container(
+                          padding: EdgeInsets.all(5),
+                          margin: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xffffffff)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(
+                            AppLocalizations.of(context)!.follows,
+                              style: TextStyle(
+                                color: Color(0xff2b2e83),
+                              ),
                             ),
                           ),
                         ),
@@ -205,7 +254,40 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           )),
                     ],
-                  )),
+                  )):
+                  InkWell(
+                    onTap: () {
+                       AddFollowingg();
+                    },
+                    child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(0xffffffff),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          margin: EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color:Color(0xff2b2e83) ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                              .beingFollowed,
+                              style: TextStyle(
+                                color: Color(0xffffffff),
+                              ),
+                            ),
+                          ),
+                        ),
+                        
+                      ],
+                    )),
+                  )
             ],
           ),
         )

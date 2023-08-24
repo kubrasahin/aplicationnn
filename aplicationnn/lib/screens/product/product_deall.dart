@@ -62,8 +62,7 @@ class _ProductDealState extends State<ProductDeal> {
         body: jsonEncode(buyNowProduct));
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyTake()));
+    showSnackbar("Ürünü Aldınız Kodunuz:2323232321");
     } else if (res.statusCode == 400) {
       showMessageInScaffold(
           AppLocalizations.of(context)!.youCannoBuyYourOwnProduct);

@@ -239,158 +239,168 @@ class _StoreScreenState extends State<StoreScreen> {
                             itemCount: productList!.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 20),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ProductDeal(
-                                                  productID: productList![index]
-                                                      ['id'],
-                                                )));
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(40),
-                                        image: DecorationImage(
-                                            image: NetworkImage(
-                                                productList![index]
-                                                    ['imageUrl']),
-                                            fit: BoxFit.cover)),
-                                    height: 180,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(3.0),
-                                                  child: InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        UseProfil(
-                                                                          companyId:
-                                                                              productList![index]['companyId'],
-                                                                        )));
-                                                      },
-                                                      child: CircleAvatar(
-                                                        radius: 30,
-                                                        child: ClipOval(
-                                                          child: productList![
-                                                                          index]
-                                                                      [
-                                                                      'companyImageUrl'] ==
-                                                                  null
-                                                              ? Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                          image:
-                                                                              DecorationImage(
-                                                                    image:
-                                                                        AssetImage(
-                                                                      'assets/askida.png',
-                                                                    ),
-                                                                  )),
-                                                                )
-                                                              : Image.network(
-                                                                  productList![
-                                                                          index]
-                                                                      [
-                                                                      'companyImageUrl'],
-                                                                  fit: BoxFit
-                                                                      .cover),
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(3.0),
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          UseProfil(
+                                                                            companyId:
+                                                                                productList![index]['companyId'],
+                                                                          )));
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius: 20,
+                                                          child: ClipOval(
+                                                            child: productList![
+                                                                            index]
+                                                                        [
+                                                                        'companyImageUrl'] ==
+                                                                    null
+                                                                ? Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                            image:
+                                                                                DecorationImage(
+                                                                      image:
+                                                                          AssetImage(
+                                                                        'assets/askida.png',
+                                                                      ),
+                                                                    )),
+                                                                  )
+                                                                : Image.network(
+                                                                    productList![
+                                                                            index]
+                                                                        [
+                                                                        'companyImageUrl'],
+                                                                    fit: BoxFit
+                                                                        .cover),
+                                                          ),
+                                                        )),
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child:  FittedBox(
+                                                         fit: BoxFit.scaleDown,
+                                                        child: AutoSizeText(
+                                                          productList![index]
+                                                              ["companyName"],
+                                                          style: TextStyle(
+                                                            color: Color(0xffffffff),
+                                                            fontWeight: FontWeight.w700,
+                                                            fontSize: 17
+                                                          ),
                                                         ),
-                                                      )),
-                                                ),
-                                                Container(
-                                                  width: 100,
-                                                  child: FittedBox(
-                                                     fit: BoxFit.fill,
-                                                    child: AutoSizeText(
-                                                      productList![index]
-                                                          ["companyName"],
-                                                      style: TextStyle(
-                                                        color: Color(0xffffffff),
-                                                        fontWeight: FontWeight.w700,
                                                       ),
                                                     ),
+                                                  
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 2),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => ProductDeal(
+                                                        productID: productList![index]
+                                                            ['id'],
+                                                      )));
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(40),
+                                              image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      productList![index]
+                                                          ['imageUrl']),
+                                                  fit: BoxFit.cover)),
+                                          height: 180,
+                                          width: MediaQuery.of(context).size.width,
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 15, bottom: 10),
+                                                child: Align(
+                                                  alignment: Alignment.bottomRight,
+                                                  child: Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(1.0),
+                                                        child: IconButton(
+                                                            icon: Icon(
+                                                              Icons.download,
+                                                              color:
+                                                                  Color(0xffffffff),
+                                                            ),
+                                                            onPressed: () {
+                                                              orderProduct(
+                                                                  context,
+                                                                  productList![
+                                                                      index]);
+                                                            }),
+                                                      ),
+                                                      Container(
+                                                        padding: EdgeInsets.all(5),
+                                                        margin: EdgeInsets.all(1),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    10),
+                                                            color: Color(0xffffffff)),
+                                                        child: FittedBox(
+                                                           fit: BoxFit.scaleDown,
+                                                          child: AutoSizeText(
+                                                            maxLines: 2,
+                                                            productList![index]
+                                                                        ["productStock"]
+                                                                    .toString() +
+                                                                '  ' +
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .piece,
+                                                            style: TextStyle(
+                                                              fontSize: 17,
+                                                              color: Color(0xff2b2e83),
+                                                              fontWeight:
+                                                                  FontWeight.w700,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 15, bottom: 10),
-                                          child: Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(1.0),
-                                                  child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.download,
-                                                        color:
-                                                            Color(0xffffffff),
-                                                      ),
-                                                      onPressed: () {
-                                                        orderProduct(
-                                                            context,
-                                                            productList![
-                                                                index]);
-                                                      }),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.all(5),
-                                                  margin: EdgeInsets.all(1),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Color(0xffffffff)),
-                                                  child: FittedBox(
-                                                     fit: BoxFit.scaleDown,
-                                                    child: AutoSizeText(
-                                                      maxLines: 2,
-                                                      productList![index]
-                                                                  ["productStock"]
-                                                              .toString() +
-                                                          '  ' +
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .piece,
-                                                      style: TextStyle(
-                                                        fontSize: 17,
-                                                        color: Color(0xff2b2e83),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               );
                             }),
