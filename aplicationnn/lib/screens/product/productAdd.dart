@@ -105,7 +105,7 @@ class _ProductAddState extends State<ProductAdd> {
         "description": description.toString(),
         "categoryId": categoryList![valcategory!]["id"].toString(),
         "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
-        "categoryName": categoryList![valcategory!]["title"].toString(),
+        "categoryName":  categoryList![valcategory!]["title"].toString(),
         "subCategoryName": subCategoryList![_selectedIndex]["title"].toString(),
         "productStock": stock.toString(),
         "keyWords": keyword.toString(),
@@ -538,6 +538,7 @@ class _ProductAddState extends State<ProductAdd> {
                         const Divider(),
                         InkWell(
                           onTap: () {
+                            valcategory==null? showMessageInScaffoldTwo("Lütfen kategoriyi seçiniz") :
                             saveProduct();
                           },
                           child: Padding(

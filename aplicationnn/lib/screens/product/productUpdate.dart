@@ -540,6 +540,7 @@ void showMessageInScaffoldTwo(messagee) {
                     children: [
                       InkWell(
                         onTap: () {
+                          valcategory==null? showMessageInScaffoldTwo("Lütfen kategoriyi seçiniz") :
                           updateProducttt();
                         },
                         child: Padding(

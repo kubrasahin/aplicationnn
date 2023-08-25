@@ -115,10 +115,9 @@ class _ProductCardState extends State<ProductCard> {
                                                 'companyImageUrl'] ==
                                             null
                                         ? Container()
-                                        : Image.network(
-                                            widget.productData![
-                                                'companyImageUrl'],
-                                            fit: BoxFit.cover),
+                                        : Container(decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage( widget.productData![
+                                    'companyImageUrl'],
+                                        )  )),),
                                   ),
                                 )),
                           ),
