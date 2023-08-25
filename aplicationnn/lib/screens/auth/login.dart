@@ -341,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen>
                       color: Color.fromARGB(255, 224, 224, 226))),
               errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.red)),
+                  borderSide: const BorderSide(color: Colors.black)),
               focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(color: Colors.red))),
