@@ -38,6 +38,7 @@ class _TabControllerrrState extends State<TabControllerrr>
           height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
+              SizedBox(height: 30,),
               Container(
                 child: Stack(
                   children: [
@@ -47,7 +48,7 @@ class _TabControllerrrState extends State<TabControllerrr>
                         width: 150,
                         height: 150,
                         child: Image.asset(
-                          'askida.png',
+                          'assets/askida.png',
                         ),
                       ),
                     ),

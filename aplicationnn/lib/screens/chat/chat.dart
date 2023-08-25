@@ -167,12 +167,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),*/
-      body: body(),
-    );
-  }
-
-  body() {
-    return chatSenderList == null
+      body:  chatSenderList == null
         ? const Center(child: CircularProgressIndicator())
         : Padding(
             padding: const EdgeInsets.all(5.0),
@@ -185,7 +180,7 @@ class _ChatPageState extends State<ChatPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  chatSenderList == null
+                  userDetail == null
                       ? const Center(child: CircularProgressIndicator())
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,7 +200,7 @@ class _ChatPageState extends State<ChatPage> {
                                                 'assets/askida.png',
                                               ),
                                             )),
-                                          ),
+                                          )
                                         )
                                       : CircleAvatar(
                                           radius: 25,
@@ -268,8 +263,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                   ),
                   Expanded(
-                    child: Container(
-                      child: chatSenderList == null
+                    child:  chatSenderList == null
                           ? Container()
                           : ListView.builder(
                               reverse: true,
@@ -345,7 +339,7 @@ class _ChatPageState extends State<ChatPage> {
                                         ),
                                       );
                               }),
-                    ),
+                    
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -393,7 +387,7 @@ class _ChatPageState extends State<ChatPage> {
                               },
                               child: CircleAvatar(
                                 backgroundColor: Color(0xff5790df),
-                                radius: 25,
+                                radius: 30,
                                 child: const Icon(
                                   Icons.send,
                                   color: Colors.white,
@@ -407,8 +401,11 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
-          );
+          ),
+    );
   }
+
+ 
 
   Widget emojiSelect() {
     return Offstage(

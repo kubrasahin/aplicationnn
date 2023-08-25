@@ -193,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen>
                     Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                         child: DropdownButton<Language>(
                           underline: const SizedBox(),
                           icon: const Icon(
@@ -232,22 +232,21 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 Container(
                   // group48kgw (2:25)
-                  margin: EdgeInsets.fromLTRB(
-                      70 * fem, 0 * fem, 40 * fem, 40 * fem),
+                
                   width: double.infinity,
                   height: 164 * fem,
                   child: Stack(
                     children: [
                       Positioned(
                         // imageT5Z (2:2)
-                        left: 0 * fem,
-                        top: 0 * fem,
+                      
                         child: Align(
+                          alignment: Alignment.center,
                           child: SizedBox(
                             width: 202 * fem,
                             height: 136 * fem,
                             child: Image.asset(
-                              'image.png',
+                              'assets/image.png',
                             ),
                           ),
                         ),
@@ -277,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen>
                               builder: (context) => const NumberPage()));
                     },
                     child: Text(
-                      "Şifremi Unuttum ?",
+                     AppLocalizations.of(context)!.forgotMyPassword,
                       style: TextStyle(color: Colors.white),
                     )),
                 buildRowRegister()
