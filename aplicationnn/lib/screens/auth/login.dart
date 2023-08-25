@@ -354,7 +354,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Container(
-        height: 70,
+        height: 75,
         child: TextFormField(
           style: TextStyle(color: Color(0xff8c8c8c)),
           cursorColor: const Color.fromARGB(255, 230, 36, 102),
