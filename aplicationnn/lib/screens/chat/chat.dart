@@ -167,7 +167,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),*/
-      body:  chatSenderList == null
+      body: chatSenderList == null
         ? const Center(child: CircularProgressIndicator())
         : Padding(
             padding: const EdgeInsets.all(5.0),
