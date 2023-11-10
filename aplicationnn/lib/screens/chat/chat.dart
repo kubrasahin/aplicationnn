@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../id.dart';
 import '../../services/chatService.dart';
 import '../../services/userService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -30,11 +31,10 @@ class _ChatPageState extends State<ChatPage> {
   String? message, isMe;
   List? chatSenderList, chatReciverList;
   static var userDetail;
-  String url = "http://185.88.175.96:";
   FocusNode focusnode = FocusNode();
   final TextEditingController controller = TextEditingController();
   final ScrollController scrollController = ScrollController();
-
+  final _formKey = GlobalKey<FormState>();
   get id => widget.chatId;
   @override
   void initState() {
@@ -48,8 +48,7 @@ class _ChatPageState extends State<ChatPage> {
       if (mounted) {
         setState(() {
           userDetail = value;
-          print("++++++DETAYYYYYYYYYYYY+++++++++++++");
-          print(userDetail);
+
           userDetailLoading = true;
         });
       }
@@ -61,6 +60,21 @@ class _ChatPageState extends State<ChatPage> {
       }
     });
   }
+  void showMessageInScaffold(messagee) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      elevation: 6.0,
+      backgroundColor: Color(0xffef6328),
+      behavior: SnackBarBehavior.floating,
+      content: Text(
+        messagee,
+        style: TextStyle(color: Colors.white),
+      ),
+      action: SnackBarAction(
+          textColor: Color(0xffffffff),
+          label: AppLocalizations.of(context)!.close,
+          onPressed: () {}),
+    ));
+  }
 
   getSenderMessages() async {
     await ChatServices.getSenderReciverChat(widget.chatId).then((onValue) {
@@ -68,15 +82,12 @@ class _ChatPageState extends State<ChatPage> {
         setState(() {
           chatSenderList = onValue['content'];
           isMe = widget.chatId;
-          print("++++++SENDER+++++++++++++");
-          print(chatSenderList);
           isChatMessagesLoading = true;
         });
       }
     }).catchError((error) {
       if (mounted) {
         setState(() {
-          print("HATAAAAAAAA");
           isChatMessagesLoading = false;
         });
       }
@@ -91,7 +102,7 @@ class _ChatPageState extends State<ChatPage> {
     String? basic = basicAuth.getString('basic');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = basicAuth.getString('token');
-    var res = await http.post(Uri.parse(url + "/rest/message-sender/$id"),
+    var res = await http.post(Uri.parse(Id + "/rest/message-sender/$id"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
@@ -101,7 +112,6 @@ class _ChatPageState extends State<ChatPage> {
         body: jsonEncode(body));
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
-      print("MESja İltildi");
       getSenderMessages();
       controller.text = '';
     } else {}
@@ -169,243 +179,249 @@ class _ChatPageState extends State<ChatPage> {
       ),*/
       body: chatSenderList == null
         ? const Center(child: CircularProgressIndicator())
-        : Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Container(
-              height: MediaQuery.sizeOf(context).height,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                  color: Color(0x33e6eefa),
-                  borderRadius: BorderRadius.circular(40)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  userDetail == null
-                      ? const Center(child: CircularProgressIndicator())
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Row(
-                                children: [
-                                  userDetail["imageUrl"] == null
-                                      ? CircleAvatar(
-                                          radius: 25,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                              image: AssetImage(
-                                                'assets/askida.png',
-                                              ),
-                                            )),
-                                          )
-                                        )
-                                      : CircleAvatar(
-                                          radius: 25,
-                                          backgroundImage: NetworkImage(
-                                              userDetail["imageUrl"]),
-                                          backgroundColor: Colors.transparent,
-                                        ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        userDetail["firstName"] +
-                                                    userDetail["lastName"] ==
-                                                null
-                                            ? Container()
-                                            : Text(
-                                                userDetail["firstName"] +
-                                                    '  ' +
-                                                    userDetail["lastName"],
-                                                style: TextStyle(
-                                                  color: Color(0xffffffff),
+        : Form(
+        key: _formKey,
+          child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Container(
+                height: MediaQuery.sizeOf(context).height,
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                    color: Color(0x33e6eefa),
+                    borderRadius: BorderRadius.circular(40)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    userDetail == null
+                        ? const Center(child: CircularProgressIndicator())
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: Row(
+                                  children: [
+                                    userDetail["imageUrl"] == null
+                                        ? CircleAvatar(
+                                            radius: 25,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                image: AssetImage(
+                                                  'assets/askida.png',
                                                 ),
-                                              )
-                                      ],
+                                              )),
+                                            )
+                                          )
+                                        : CircleAvatar(
+                                            radius: 25,
+                                            backgroundImage: NetworkImage(
+                                                userDetail["imageUrl"]),
+                                            backgroundColor: Colors.transparent,
+                                          ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          userDetail["firstName"] +
+                                                      userDetail["lastName"] ==
+                                                  null
+                                              ? Container()
+                                              : Text(
+                                                  userDetail["firstName"] +
+                                                      '  ' +
+                                                      userDetail["lastName"],
+                                                  style: TextStyle(
+                                                    color: Color(0xffffffff),
+                                                  ),
+                                                )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomeeScreen(
+                                                currentIndex: 2,
+                                              )));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 20, bottom: 5, top: 5),
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: Color(0xff5790df),
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Color(0xffffffff),
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeeScreen(
-                                              currentIndex: 2,
-                                            )));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 20, bottom: 5, top: 5),
+                            ],
+                          ),
+                    Expanded(
+                      child:  chatSenderList == null
+                            ? Container()
+                            : ListView.builder(
+                                reverse: true,
+                                controller: scrollController,
+                                itemCount: chatSenderList!.length,
+                                itemBuilder: (context, index) {
+                                  return isMe ==
+                                          chatSenderList![index]['receiverId']
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xff5790df),
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    30),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    20))),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(13),
+                                                  child: Text(
+                                                      chatSenderList![index]
+                                                          ['message']),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Flexible(
+                                                  child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xffffffff),
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    20),
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    30),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    20))),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(13),
+                                                  child: Text(
+                                                      chatSenderList![index]
+                                                          ['message']),
+                                                ),
+                                              ))
+                                            ],
+                                          ),
+                                        );
+                                }),
+                    ),
+
+
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, top: 5, bottom: 15),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Stack(children: [
+                          TextFormField(
+                            focusNode: focusnode,
+                            textAlignVertical: TextAlignVertical.center,
+                            keyboardType: TextInputType.multiline,
+                            minLines: 1,
+                            controller: controller,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Boş Mesaj Göndermeyiniz";
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                            fillColor: Color(0xffffffff),
+                            filled: true,
+
+                            /*prefixIcon: IconButton(
+                                    onPressed: () {
+                                      focusnode.unfocus();
+                                      focusnode.canRequestFocus = false;
+                                      setState(() {
+                                        show = !show;
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.emoji_emotions,
+                                      color: Color.fromARGB(255, 85, 53, 231),
+                                    )),*/
+                            hintText: AppLocalizations.of(context)!.message,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    color: Color(0xffffffff))),
+                            border: OutlineInputBorder(
+                                borderSide: const BorderSide(width: 1),
+                                borderRadius: BorderRadius.circular(30)),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: const BorderSide(color: Color(0xff5790df))),),
+                          ),
+                          Positioned(
+                              right: 0,
+                              child: InkWell(
+                                onTap:  () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    sendMessage(controller.text);
+                                  }
+
+                                },
                                 child: CircleAvatar(
-                                  radius: 20,
                                   backgroundColor: Color(0xff5790df),
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Color(0xffffffff),
+                                  radius: 30,
+                                  child: const Icon(
+                                    Icons.send,
+                                    color: Colors.white,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Divider(
-                      color: Color(0xff5790df),
-                    ),
-                  ),
-                  Expanded(
-                    child:  chatSenderList == null
-                          ? Container()
-                          : ListView.builder(
-                              reverse: true,
-                              controller: scrollController,
-                              itemCount: chatSenderList!.length,
-                              itemBuilder: (context, index) {
-                                return isMe ==
-                                        chatSenderList![index]['receiverId']
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Flexible(
-                                                child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xff5790df),
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  30),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  20),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  20))),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(13),
-                                                child: Text(
-                                                    chatSenderList![index]
-                                                        ['message']),
-                                              ),
-                                            ))
-                                          ],
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Flexible(
-                                                child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Color(0xffffffff),
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  20),
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  30),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  20))),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(13),
-                                                child: Text(
-                                                    chatSenderList![index]
-                                                        ['message']),
-                                              ),
-                                            ))
-                                          ],
-                                        ),
-                                      );
-                              }),
-                    
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 5, bottom: 15),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Stack(children: [
-                        Expanded(
-                            child: TextFormField(
-                          focusNode: focusnode,
-                          textAlignVertical: TextAlignVertical.center,
-                          keyboardType: TextInputType.multiline,
-                          minLines: 1,
-                          controller: controller,
-                          decoration: InputDecoration(
-                              fillColor: Color(0xffffffff),
-                              filled: true,
-
-                              /*prefixIcon: IconButton(
-                                      onPressed: () {
-                                        focusnode.unfocus();
-                                        focusnode.canRequestFocus = false;
-                                        setState(() {
-                                          show = !show;
-                                        });
-                                      },
-                                      icon: const Icon(
-                                        Icons.emoji_emotions,
-                                        color: Color.fromARGB(255, 85, 53, 231),
-                                      )),*/
-                              hintText: AppLocalizations.of(context)!.message,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffffffff))),
-                              border: OutlineInputBorder(
-                                  borderSide: const BorderSide(width: 1),
-                                  borderRadius: BorderRadius.circular(30))),
-                        )),
-                        Positioned(
-                            right: 0,
-                            child: InkWell(
-                              onTap: () async {
-                                sendMessage(controller.text);
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Color(0xff5790df),
-                                radius: 30,
-                                child: const Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ))
-                      ]),
-                      // show ? emojiSelect() : Container()
-                    ),
-                  )
-                ],
+                              ))
+                        ]),
+                        // show ? emojiSelect() : Container()
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
+        ),
     );
   }
-
- 
 
   Widget emojiSelect() {
     return Offstage(
@@ -423,7 +439,6 @@ class _ChatPageState extends State<ChatPage> {
               indicatorColor: Color.fromARGB(255, 85, 53, 231),
               iconColor: Colors.grey,
               iconColorSelected: Color.fromARGB(255, 85, 53, 231),
-              showRecentsTab: true,
               recentsLimit: 28,
               categoryIcons: CategoryIcons(),
               buttonMode: ButtonMode.MATERIAL),
@@ -434,6 +449,43 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //Text(   chatList![index]['notifications'][index]['message'])
 
 /* import 'package:flutter/material.dart';

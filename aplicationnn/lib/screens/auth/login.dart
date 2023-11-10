@@ -3,8 +3,10 @@ import 'package:aplicationnn/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import '../../id.dart';
 import '../../main.dart';
 import '../admin/adminHome.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -12,6 +14,7 @@ import '../../classes/language.dart';
 import 'package:aplicationnn/classes/language.constants.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../notification/notifications.dart';
 import 'forgotpassword.dart';
 import 'otpTwo.dart';
 
@@ -30,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen>
   final passwordController = TextEditingController();
   String? getMobileNumber, getPassword;
 
-  static String url = "http://185.88.175.96";
+
   late AnimationController lottieController;
 
   @override
@@ -38,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen>
     lottieController =
         AnimationController(vsync: this, duration: Duration(seconds: 5));
     lottieController.repeat(reverse: true);
+    setupOneSignal();
     super.initState();
   }
 
@@ -46,6 +50,63 @@ class _LoginScreenState extends State<LoginScreen>
     lottieController.dispose();
     super.dispose();
   }
+
+
+  setupOneSignal()async{
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+    OneSignal.shared.setAppId("252114c9-9268-4c06-9841-f7b3bb31c0ab");
+    OneSignal.shared
+        .promptUserForPushNotificationPermission() // kullanıcıdan izin al
+        .then((accepted) {
+      debugPrint("Accepted permission: $accepted");
+    });
+    await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
+    var deviceState = await OneSignal.shared.getDeviceState();
+    var pushToken = deviceState!.userId;
+
+    print("OneSignal Push Aboneliği Token: $pushToken");
+    SharedPreferences playerId = await SharedPreferences.getInstance();
+    playerId.setString('playerId', pushToken!);
+    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result){
+      //kullanıcı bildirime tıkladığında sonuc döndürüyor
+      print("vERİİİİİİİİİİİİİİİİİ");
+      print(result.notification.androidNotificationId);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationPage()));
+
+    });
+  }
+
+
+  sendPlayerId() async{
+    SharedPreferences playerId = await SharedPreferences.getInstance();
+    String? playerIdd = playerId.getString('playerId');
+    Map<String, dynamic> body = {
+      "playerId":playerIdd,
+    };
+    SharedPreferences basicAuth = await SharedPreferences.getInstance();
+    String? basic = basicAuth.getString('basic');
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
+    var res = await http.put(Uri.parse(Id + "/rest/user-setPlayerId"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          "Access-Control-Allow-Headers":
+          "Access-Control-Allow-Origin, Accept",
+          'Authorization': 'Bearer' + tokenn!,
+        },
+        body: jsonEncode(body));
+    var response = json.encode(res.body);
+    if (res.statusCode == 200) {
+
+    } else {
+      showMessageInScaffold(
+         " AppLocalizations.of(context)!.errorOccurredOnUpdate");
+
+    }
+  }
+
 
   var maskFormatter = MaskTextInputFormatter(
       mask: '+##########',
@@ -56,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen>
       type: MaskAutoCompletionType.lazy);
 
   signIn(String user, String password) async {
-    if (_formKey.currentState!.validate()) {
+      if (_formKey.currentState!.validate()) {
       Map<String, dynamic> body = {
         "mobileNumber": user,
         "password": password,
@@ -64,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen>
       final String auth =
           'Basic ' + base64Encode(utf8.encode('$user:$password'));
 
-      var res = await http.post(Uri.parse(url + "/api/login"),
+      var res = await http.post(Uri.parse(Id + "/api/login"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',
@@ -80,9 +141,10 @@ class _LoginScreenState extends State<LoginScreen>
         SharedPreferences basicAuth = await SharedPreferences.getInstance();
         basicAuth.setString('basic', auth);
         print("TOKENNNNNNN");
+        sendPlayerId();
         print(response);
         var res = await http.get(
-          Uri.parse(url + "/rest/get-role"),
+          Uri.parse(Id + "/rest/get-role"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',

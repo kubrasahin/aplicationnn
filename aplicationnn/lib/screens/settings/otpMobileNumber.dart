@@ -8,6 +8,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../id.dart';
+
 class OtpMobileNumber extends StatefulWidget {
   const OtpMobileNumber({super.key});
 
@@ -17,7 +19,6 @@ class OtpMobileNumber extends StatefulWidget {
 
 class _OtpMobileNumberState extends State<OtpMobileNumber> {
   OtpFieldController otpController = OtpFieldController();
-  static String url = "http://185.88.175.96:";
   var otp;
 
   Send() async {
@@ -31,7 +32,7 @@ class _OtpMobileNumberState extends State<OtpMobileNumber> {
       "otp": otp,
     };
     var res = await http.put(
-        Uri.parse(url + "/rest/user-verified?mobileNumber=$numberNo"),
+        Uri.parse(Id  + "/rest/user-verified?mobileNumber=$numberNo"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',

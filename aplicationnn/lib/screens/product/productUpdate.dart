@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../id.dart';
 import '../../services/categoryService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -31,7 +32,6 @@ class _ProductUpdateState extends State<ProductUpdate> {
   static var productDetail;
   List? categoryList, subCategoryList;
   int _selectedIndex = 0;
-  String url = "http://185.88.175.96";
 
   XFile? image;
   String selectedFileName = '';
@@ -121,7 +121,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
       };
       var request = http.MultipartRequest(
         'PUT',
-        Uri.parse(url + "/rest/product-update/$id"),
+        Uri.parse(Id + "/rest/product-update/$id"),
       );
       /* SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
@@ -233,7 +233,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     var res = await http.delete(
-      Uri.parse(url + "/rest/product-delete/$id"),
+      Uri.parse(Id + "/rest/product-delete/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -382,6 +382,7 @@ void showMessageInScaffoldTwo(messagee) {
                               ),
                             
                               SizedBox(height: 20,),
+                            Text("Ürün Adı", style:  TextStyle(color: Colors.white, fontSize: 18),),
                             Container(
                               width: MediaQuery.of(context).size.width / 1.5,
                               child:productDetail["title"] == null? TextFormField(
@@ -410,13 +411,15 @@ void showMessageInScaffoldTwo(messagee) {
                                   title = value;
                                 },
                                 decoration: InputDecoration(
+
                                   border: InputBorder.none,
                                   hintText: AppLocalizations.of(context)!
                                       .enterProductName,
                                 ),
                               )
-                            ),
-                            const Divider( color: Color(0xffffffff),),
+                            ),const Divider( color: Color(0xffffffff),),
+                            Text("Açıklama", style:  TextStyle(color: Colors.white, fontSize: 18),),
+
                             Container(
                                width: MediaQuery.of(context).size.width / 1.5,
                               child:productDetail["description"] == null
@@ -440,6 +443,8 @@ void showMessageInScaffoldTwo(messagee) {
                                       
                                 )): TextFormField(
                                 style: TextStyle(color: Color(0xffffffff)),
+                                maxLength: 300,
+                                maxLines: null,
                                 key: Key(productDetail["description"]),
                                 initialValue: productDetail["description"],
                                 onSaved: (String? value) {
@@ -454,8 +459,9 @@ void showMessageInScaffoldTwo(messagee) {
                               
                             ),
 
-                             
+
                             const Divider( color: Color(0xffffffff),),
+                            Text("Anahtar Kelime", style:  TextStyle(color: Colors.white, fontSize: 18),),
                             Container(
                                width: MediaQuery.of(context).size.width / 1.5,
                               child:productDetail["keyWords"] == null
@@ -480,6 +486,8 @@ void showMessageInScaffoldTwo(messagee) {
                                       
                                 )): TextFormField(
                                 style: TextStyle(color: Color(0xffffffff)),
+                                maxLength: 300,
+                                maxLines: null,
                                 key: Key(productDetail["keyWords"]),
                                 initialValue: productDetail["keyWords"],
                                 onSaved: (String? value) {
@@ -493,42 +501,40 @@ void showMessageInScaffoldTwo(messagee) {
                               )
                               
                             ),
-                             const Divider( color: Color(0xffffffff),),
-                            Container(
-                               width: MediaQuery.of(context).size.width / 1.5,
-                              child:productDetail["productStock"] == null
-                              ? TextFormField(
-                                  style: TextStyle(color: Color(0xffffffff)),
-                                  maxLength: 50,
-                                  onSaved: (String? value) {
-                                    stock = value;
-                                  },
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                       border: InputBorder.none,
-                                  hintText: AppLocalizations.of(context)!
-                                      .inventoryOfProduct,
-                                      hintStyle: TextStyle(color: Color(0xffffffff)),
-                                      errorStyle:
-                                          TextStyle(color: Color(0xffffffff)),
-                                      // ignore: prefer_const_constructors
-
-                                      contentPadding: EdgeInsets.all(15.0),
-                                      
-                                )): TextFormField(
+                            const Divider( color: Color(0xffffffff),),
+                            Text("Stok", style:  TextStyle(color: Colors.white, fontSize: 18),),
+                            productDetail["productStock"] == null
+                            ? TextFormField(
                                 style: TextStyle(color: Color(0xffffffff)),
-                                key: Key(productDetail["productStock"].toString()),
-                                initialValue: productDetail["productStock"].toString(),
+                                maxLength: 50,
                                 onSaved: (String? value) {
                                   stock = value;
                                 },
+                                keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: AppLocalizations.of(context)!
-                                      .enterProductName,
-                                ),
-                              )
-                              
+                                     border: InputBorder.none,
+                                hintText: AppLocalizations.of(context)!
+                                    .inventoryOfProduct,
+                                    hintStyle: TextStyle(color: Color(0xffffffff)),
+                                    errorStyle:
+                                        TextStyle(color: Color(0xffffffff)),
+                                    // ignore: prefer_const_constructors
+
+                                    contentPadding: EdgeInsets.all(15.0),
+
+                              )): TextFormField(
+                              style: TextStyle(color: Color(0xffffffff)),
+                              key: Key(productDetail["productStock"].toString()),
+                              initialValue: productDetail["productStock"].toString(),
+                              onSaved: (String? value) {
+                                stock = value;
+                              },
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+hintStyle: TextStyle(color: Colors.white, fontSize: 18),
+                                hintText: AppLocalizations.of(context)!
+                                    .inventoryOfProduct,
+                              ),
                             ),
                             
                                          const Divider( color: Color(0xffffffff),),         

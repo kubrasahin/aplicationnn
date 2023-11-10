@@ -17,7 +17,6 @@ class _FollowersScreenState extends State<FollowersScreen> {
   bool isSubCategoryLoading = false, isProductList = false;
   List? followersList;
   bool isFollowersLoading = false;
-  String url = "http://185.88.175.96:";
 
   @override
   void initState() {

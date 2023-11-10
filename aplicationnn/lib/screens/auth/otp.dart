@@ -8,6 +8,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../id.dart';
+
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
 
@@ -17,7 +19,6 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   OtpFieldController otpController = OtpFieldController();
-  static String url = "http://185.88.175.96:";
   var otp, mobileNumber;
 
   Send() async {
@@ -30,7 +31,7 @@ class _OtpScreenState extends State<OtpScreen> {
     };
     var res = await http.put(
         Uri.parse(
-            url + "/registration/user-verified?mobileNumber=$mobileNumber"),
+            Id + "/registration/user-verified?mobileNumber=$mobileNumber"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',

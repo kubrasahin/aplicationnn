@@ -9,6 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../id.dart';
+
 class NumberPage extends StatefulWidget {
   const NumberPage({super.key});
 
@@ -18,7 +20,7 @@ class NumberPage extends StatefulWidget {
 
 class _NumberPageState extends State<NumberPage> {
   OtpFieldController otpController = OtpFieldController();
-  static String url = "http://185.88.175.96";
+
   var otp;
   final userController = TextEditingController();
   final passwordController = TextEditingController();
@@ -36,7 +38,7 @@ class _NumberPageState extends State<NumberPage> {
       Map body = {
         "mobileNumber": mobileNumber,
       };
-      var res = await http.put(Uri.parse(url + "/registration/user-senderCode"),
+      var res = await http.put(Uri.parse(Id + "/registration/user-senderCode"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',

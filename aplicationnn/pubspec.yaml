@@ -58,6 +58,11 @@ dependencies:
   auto_size_text: ^3.0.0
   google_fonts: ^4.0.4
   http_parser: ^4.0.2
+  firebase_core: ^2.21.0
+  firebase_messaging: ^14.6.7
+  cloud_firestore: ^4.9.1
+  onesignal_flutter: ^3.5.0
+
 
 
   # The following adds the Cupertino Icons font to your application.

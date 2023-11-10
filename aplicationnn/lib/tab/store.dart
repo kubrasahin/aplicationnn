@@ -7,6 +7,7 @@ import 'package:aplicationnn/services/productService.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../id.dart';
 import '../screens/profil/profil.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +25,6 @@ class _StoreScreenState extends State<StoreScreen> {
       isProductLoading = false,
       addProductTocart = false;
   List? categoryList, productList, buyProductList;
-  String url = "http://185.88.175.96:";
 
   @override
   void initState() {
@@ -88,7 +88,7 @@ class _StoreScreenState extends State<StoreScreen> {
     String? basic = basicAuth.getString('basic');
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
-    var res = await http.post(Uri.parse(url + "/rest/order-create"),
+    var res = await http.post(Uri.parse(Id  + "/rest/order-create"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',

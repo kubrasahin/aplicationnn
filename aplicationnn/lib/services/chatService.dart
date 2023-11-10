@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../id.dart';
+
 class ChatServices {
-  static String url = "http://185.88.175.96:";
 
 //Kullanıcıya Özel Gönderilen Mesajları Çekme
   static Future<Map<String, dynamic>> getSenderReciverChat(id) async {
@@ -12,7 +13,7 @@ class ChatServices {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-getChat/$id"),
+      Uri.parse(Id  + "/rest/user-getChat/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -31,7 +32,7 @@ class ChatServices {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-receiver/$id"),
+      Uri.parse(Id  + "/rest/user-receiver/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -50,7 +51,7 @@ class ChatServices {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/chats"),
+      Uri.parse(Id  + "/rest/chats"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -69,7 +70,7 @@ class ChatServices {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/notifications"),
+      Uri.parse(Id  + "/rest/notifications"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -88,7 +89,7 @@ class ChatServices {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/notification-detail/$id"),
+      Uri.parse(Id  + "/rest/notification-detail/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

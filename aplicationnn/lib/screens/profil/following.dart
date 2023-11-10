@@ -23,7 +23,6 @@ class _FollowingScreenState extends State<FollowingScreen> {
   bool isSubCategoryLoading = false, isProductList = false;
   List? followingList;
   bool isFollowingLoading = false;
-  String url = "http://185.88.175.96:";
 
   @override
   void initState() {

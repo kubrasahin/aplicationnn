@@ -8,6 +8,8 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../id.dart';
+
 class KurumsalUser extends StatefulWidget {
   const KurumsalUser({Key? key}) : super(key: key);
 
@@ -34,7 +36,6 @@ class _KurumsalUserState extends State<KurumsalUser> {
       isChecked = false,
       obscureText = true,
       isCuntryLoading = false;
-  static String url = "http://185.88.175.96:";
   String? email, password, firstName, lastName, mobileNumber, taxNumber;
   var maskFormatter = MaskTextInputFormatter(
       mask: '+##########',
@@ -62,7 +63,7 @@ class _KurumsalUserState extends State<KurumsalUser> {
         "followerIds": [],
         "followingIds": []
       };
-      var res = await http.post(Uri.parse(url + "/registration/user-create"),
+      var res = await http.post(Uri.parse(Id + "/registration/user-create"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',

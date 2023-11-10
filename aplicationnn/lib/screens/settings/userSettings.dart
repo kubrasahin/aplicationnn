@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aplicationnn/id.dart';
 import 'package:aplicationnn/screens/dropdown/settings.dart';
 import 'package:aplicationnn/services/userService.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,6 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
   bool isProductLoading = false, isCategoryLoading = false;
   static var UserDetail;
   int _selectedIndex = 0;
-  String url = "http://185.88.175.96:";
 
   @override
   void initState() {
@@ -60,7 +60,7 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
       String? basic = basicAuth.getString('basic');
       SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
-      var res = await http.put(Uri.parse(url + "/rest/user-updateName"),
+      var res = await http.put(Uri.parse(Id + "/rest/user-updateName"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',
@@ -253,12 +253,60 @@ class _UserSettingScreenState extends State<UserSettingScreen> {
                       ),
                     ),
                     const Divider(),
-                    Padding(
+                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 2),
                       child: Container(
                         height: 60,
-                        child: TextFormField(
+                        child: UserDetail["email"] == null
+
+                        ?TextFormField(
+                      style: TextStyle(color: Color(0xffffffff)),
+      maxLength: 50,
+      onSaved: (String? value) {
+        email = value;
+      },
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+          prefixIcon: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
+              AppLocalizations.of(context)!.email,
+              style: TextStyle(
+                color: Color(0xffffffff),
+              ),
+            ),
+          ),
+          errorStyle:
+          TextStyle(color: Color(0xffffffff)),
+          helperText: ' ',
+          fillColor: Color(0xff2b2e83),
+          filled: true,
+          // ignore: prefer_const_constructors
+
+          contentPadding: EdgeInsets.all(15.0),
+          enabledBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.circular(20),
+              borderSide: const BorderSide(
+                  color: Color(0xff2b2e83))),
+          focusedBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.circular(20),
+              borderSide: const BorderSide(
+                  color: Color(0xff2b2e83))),
+          errorBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.circular(20),
+              borderSide: const BorderSide(
+                  color: Colors.red)),
+          focusedErrorBorder: OutlineInputBorder(
+              borderRadius:
+              BorderRadius.circular(20),
+              borderSide: const BorderSide(
+                  color: Colors.red))),
+    )
+                        :TextFormField(
                           style: TextStyle(color: Color(0xffffffff)),
                           key: Key(UserDetail["email"]),
                           initialValue: UserDetail["email"],

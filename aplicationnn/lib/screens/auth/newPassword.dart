@@ -4,6 +4,7 @@ import 'package:aplicationnn/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../id.dart';
 import '../../services/userService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,7 +23,7 @@ class _NewPasswordState extends State<NewPassword> {
   bool isProductLoading = false, isCategoryLoading = false;
   static var UserDetail;
   int _selectedIndex = 0;
-  String url = "http://185.88.175.96";
+
 
   UpdatePassword() async {
     final form = _formKey.currentState!;
@@ -37,7 +38,7 @@ class _NewPasswordState extends State<NewPassword> {
       String? tokenn = token.getString('token');
       print(mobileNumber);
       var res = await http.put(
-          Uri.parse(url +
+          Uri.parse(Id +
               "/registration/user-resetPassword?mobileNumber=$mobileNumber&passwordAgain=$newPasswordTwo"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',

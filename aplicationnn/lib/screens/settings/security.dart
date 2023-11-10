@@ -4,6 +4,7 @@ import 'package:aplicationnn/screens/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import '../../id.dart';
 import '../../services/userService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,7 +23,6 @@ class _SecurityScreenState extends State<SecurityScreen> {
   bool isProductLoading = false, isCategoryLoading = false;
   static var UserDetail;
   int _selectedIndex = 0;
-  String url = "http://185.88.175.96:";
 
   @override
   void initState() {
@@ -61,7 +61,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
       SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
       var res = await http.put(
-          Uri.parse(url +
+          Uri.parse(Id  +
               "/rest/user-changePassword?oldPassword=$password&passwordAgain=$newPasswordTwo"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',

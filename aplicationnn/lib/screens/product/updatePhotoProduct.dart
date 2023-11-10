@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:aplicationnn/id.dart';
 import 'package:aplicationnn/screens/admin/category/categorySettings.dart';
 import 'package:aplicationnn/screens/admin/subcategory/subCategorySettings.dart';
 import 'package:aplicationnn/screens/home.dart';
@@ -24,7 +25,6 @@ class _ProductPhotoAddState extends State<ProductPhotoAdd> {
   final _formKey = GlobalKey<FormState>();
 
   int? selectedIndex;
-  String url = "http://185.88.175.96:";
   XFile? image;
   String selectedFileName = '';
 
@@ -69,7 +69,7 @@ class _ProductPhotoAddState extends State<ProductPhotoAdd> {
 
     var request = http.MultipartRequest(
       'PUT',
-      Uri.parse("http://185.88.175.96/rest/product-uploadImage/$id"),
+      Uri.parse(Id  +"/rest/product-uploadImage/$id"),
     );
     request.headers.addAll(headers);
     Uint8List data = await this.image!.readAsBytes();

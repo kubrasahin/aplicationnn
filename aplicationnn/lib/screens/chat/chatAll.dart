@@ -8,6 +8,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../id.dart';
+
 class ChatAll extends StatefulWidget {
   const ChatAll({super.key});
 
@@ -21,7 +23,6 @@ class _ChatAllState extends State<ChatAll> {
   bool ischatLoading = false;
   List? chatList, chatTwoList;
   bool isSwitched = false;
-  String url = "http://185.88.175.96";
 
   get id => chatList![selectedIndex!]['receiverId'];
 
@@ -68,8 +69,9 @@ class _ChatAllState extends State<ChatAll> {
     String? basic = basicAuth.getString('basic');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = basicAuth.getString('token');
+  setState(() async{
     var res = await http.delete(
-      Uri.parse(url + "/rest/chat-deleteAll/$id"),
+      Uri.parse(Id + "/rest/chat-deleteAll/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -83,6 +85,7 @@ class _ChatAllState extends State<ChatAll> {
     } else {
       showMessageInScaffold(AppLocalizations.of(context)!.error);
     }
+  });
   }
 
   void showMessageInScaffold(messagee) {
@@ -162,12 +165,10 @@ class _ChatAllState extends State<ChatAll> {
                 ]),
           ),
         ),
-        body: chatList == null
-            ? const Center(child: CircularProgressIndicator())
-            : Container(
+        body:  Container(
                 height: MediaQuery.of(context).size.height,
                 decoration: const BoxDecoration(color: Color(0xff030116)),
-                child: ListView(
+                child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -220,87 +221,90 @@ class _ChatAllState extends State<ChatAll> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        height: MediaQuery.sizeOf(context).height,
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(40),
-                              topRight: Radius.circular(40)),
-                          color: Color(0x33e6eefa),
-                        ),
-                        child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: chatList!.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChatPage(
-                                              chatId: chatList![index]
-                                                  ['senderId'])));
-                                },
-                                child: Column(
-                                  children: [
-                                    Slidable(
-                                      key: ValueKey(chatList![index]),
-                                      endActionPane: ActionPane(
-                                        motion: const DrawerMotion(),
-                                        extentRatio: 0.16,
-                                        children: [
-                                          SlidableAction(
-                                              icon: Icons.delete,
-                                              backgroundColor:
-                                                  const Color.fromARGB(
-                                                      255, 100, 50, 240),
-                                              onPressed: (context) {
-                                                setState(() {
-                                                  selectedIndex = chatList!
-                                                      .indexOf(
-                                                          chatList![index]);
-                                                  deleteMessage(index);
-                                                });
-                                              })
-                                        ],
+                  Expanded(
+                    child: chatList==null? const Center(child: CircularProgressIndicator()) :  Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Container(
+
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40)),
+                            color: Color(0x33e6eefa),
+                          ),
+                          child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: chatList!.length,
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatPage(
+                                                chatId: chatList![index]
+                                                    ['senderId'])));
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Divider(
+                                          color:
+                                          Color.fromARGB(255, 40, 119, 209),
+                                        ),
                                       ),
-                                      child: Container(
-                                        height: 70,
-                                        child: ListTile(
-                                          title: Text(
-                                            chatList![index]['senderName'],
-                                            style: TextStyle(
-                                              color: Color(0xffffffff),
+                                      Slidable(
+                                        key: ValueKey(chatList![index]),
+                                        endActionPane: ActionPane(
+                                          motion: const DrawerMotion(),
+                                          extentRatio: 0.16,
+                                          children: [
+                                            SlidableAction(
+                                                icon: Icons.delete,
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 100, 50, 240),
+                                                onPressed: (context) {
+                                                  setState(() {
+                                                    selectedIndex = chatList!
+                                                        .indexOf(
+                                                            chatList![index]);
+                                                    deleteMessage(index);
+                                                  });
+                                                })
+                                          ],
+                                        ),
+                                        child: Container(
+                                          height: 70,
+                                          child: ListTile(
+                                            title: Text(
+                                              chatList![index]['senderName'],
+                                              style: TextStyle(
+                                                color: Color(0xffffffff),
+                                              ),
                                             ),
-                                          ),
-                                          subtitle: Text(
-                                            chatList![index]['message'],
-                                            style: TextStyle(
-                                              color: Color(0xffffffff),
+                                            subtitle: Text(
+                                              chatList![index]['message'],
+                                              style: TextStyle(
+                                                color: Color(0xffffffff),
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Divider(
-                                        color:
-                                            Color.fromARGB(255, 40, 119, 209),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            }),
+
+                                    ],
+                                  ),
+                                );
+                              }),
+                        ),
                       ),
-                    ),
+                  ),
                   ],
                 )),
       ),

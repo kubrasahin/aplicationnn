@@ -5,13 +5,14 @@ import 'package:aplicationnn/screens/product/productSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../id.dart';
 import '../../services/categoryService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
 class ProductAdd extends StatefulWidget {
-  const ProductAdd({super.key});
+   ProductAdd({super.key,});
 
   @override
   State<ProductAdd> createState() => _ProductAddState();
@@ -22,9 +23,9 @@ class _ProductAddState extends State<ProductAdd> {
   final _formKey = GlobalKey<FormState>();
   String? title, description, keyword, category, subcategory, stock;
   int? valcategory, selectedIndex;
-  String url = "http://185.88.175.96:";
   bool isCategoryLoading = false;
   List? categoryList, subCategoryList;
+  bool isButtonDisabled = true;
 
   int _selectedIndex = 0;
   XFile? image;
@@ -77,8 +78,11 @@ class _ProductAddState extends State<ProductAdd> {
   }
 
   saveProduct() async {
+    isButtonDisabled=true;
+
     final form = _formKey.currentState!;
     if (_formKey.currentState!.validate()) {
+
       form.save();
 
       SharedPreferences token = await SharedPreferences.getInstance();
@@ -92,7 +96,7 @@ class _ProductAddState extends State<ProductAdd> {
       };
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("http://185.88.175.96/rest/product-create"),
+        Uri.parse(Id+ "/rest/product-create"),
       );
       /* SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
@@ -580,16 +584,19 @@ class _ProductAddState extends State<ProductAdd> {
         height: 50,
         width: 200,
         child: TextButton(
-            onPressed: () async {
-              saveProduct();
-            },
-            child: Text(
+            onPressed:() async{
+setState(() {
+  saveProduct();
+  isButtonDisabled=true;
+});},
+            child: isButtonDisabled==true? CircleAvatar(): Text(
               AppLocalizations.of(context)!.save,
               style: TextStyle(color: Colors.white, fontSize: 22),
             )),
       ),
     );
   }
+
 
   Widget buildDropField() {
     return Column(

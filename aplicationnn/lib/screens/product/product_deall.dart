@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../id.dart';
 import '../../services/productService.dart';
 import '../takeHelp/myTake.dart';
 import 'package:http/http.dart' as http;
@@ -19,9 +20,9 @@ class ProductDeal extends StatefulWidget {
 
 class _ProductDealState extends State<ProductDeal> {
   var productDetail;
+
   String? variantUnit, variantId, currency, description;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String url = "http://185.88.175.96:";
   int? groupValue = 0;
   bool? sizeSelect = false,
       getTokenValue = false,
@@ -52,7 +53,7 @@ class _ProductDealState extends State<ProductDeal> {
     String? basic = basicAuth.getString('basic');
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
-    var res = await http.post(Uri.parse(url + "/rest/order-create"),
+    var res = await http.post(Uri.parse(Id + "/rest/order-create"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
@@ -201,55 +202,58 @@ class _ProductDealState extends State<ProductDeal> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(40)),
-                          height: MediaQuery.of(context).size.height / 3,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(productDetail['imageUrl']))),
-                      Positioned(
-                        bottom: -25,
-                        left: 3,
-                        child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UseProfil(
-                                            companyId:
-                                                productDetail['companyId'],
-                                          )));
-                            },
-                            child: CircleAvatar(
-                              radius: 40,
-                              child: ClipOval(
-                                child: productDetail['companyImageUrl'] == null
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                          image: AssetImage(
-                                            'assets/askida.png',
-                                          ),
-                                        )),
-                                      )
-                                    : Image.network(
-                                        productDetail['companyImageUrl'],
-                                        fit: BoxFit.cover),
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(fit: BoxFit.cover,
+                              image: NetworkImage(productDetail['imageUrl'])),
+                        ),
+                        height: MediaQuery.of(context).size.height / 3,
+                        width: MediaQuery.of(context).size.width,
+                        ),
+                    Positioned(
+                      bottom: -25,
+                      left: 3,
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UseProfil(
+                                          companyId:
+                                              productDetail['companyId'],
+                                        )));
+                          },
+                          child: CircleAvatar(
+                            radius: 40,
+                            child: ClipOval(
+                              child: productDetail['companyImageUrl'] == null
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/askida.png',
+                                        ),
+                                      )),
+                                    )
+                                  :Container(
+    decoration: BoxDecoration(
+    image: DecorationImage(fit: BoxFit.cover,
+    image: NetworkImage(
+    productDetail['companyImageUrl'],
+
+    ),
+    )),
+    )
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 40,
                 ),
                 Expanded(
                   child: Stack(
@@ -274,7 +278,8 @@ class _ProductDealState extends State<ProductDeal> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       productDetail['title'],
-                                      style: const TextStyle(fontSize: 20),
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 20),
                                     ),
                                   ),
                                   Align(
@@ -307,8 +312,33 @@ class _ProductDealState extends State<ProductDeal> {
                             Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 15, left: 8, right: 8),
-                              child: Text(productDetail['description']),
+                              child: Text(productDetail['description'], style: const TextStyle(
+                                  color: Colors.white, fontSize: 18),),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 15, left: 8, right: 8),
+                              child: Row( mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(productDetail['productStock'].toString(), style: const TextStyle(
+                                      color: Colors.white, fontSize: 18),),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text("Adet", style: const TextStyle(
+                                        color: Colors.white, fontSize: 18),),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: 15, left: 8, right: 8),
+                              child: Text(productDetail['companyName'], style: const TextStyle(
+                                  color: Colors.white, fontSize: 18),),
+                            ),
+
+
                           ],
                         ),
                       ),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../id.dart';
 import '../../services/productService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -21,7 +22,6 @@ class _ProductSettingScreenState extends State<ProductSettingScreen> {
   bool isCategoryLoading = false, isProductList = false;
   List? categoryList, subCategoryList, productList;
   bool isSwitched = false;
-  String url = "http://185.88.175.96:";
 
   get id => productList![selectedIndex!]['id'];
 
@@ -59,7 +59,7 @@ class _ProductSettingScreenState extends State<ProductSettingScreen> {
     String? basic = basicAuth.getString('basic');
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
-    var res = await http.put(Uri.parse(url + "/rest/product-updateStatus/$id"),
+    var res = await http.put(Uri.parse(Id + "/rest/product-updateStatus/$id"),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
@@ -81,7 +81,7 @@ class _ProductSettingScreenState extends State<ProductSettingScreen> {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     var res = await http.delete(
-      Uri.parse(url + "/rest/product-delete/$id"),
+      Uri.parse(Id + "/rest/product-delete/$id") ,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

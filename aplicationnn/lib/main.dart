@@ -1,10 +1,10 @@
 import 'package:aplicationnn/classes/language.constants.dart';
 import 'package:aplicationnn/screens/auth/login.dart';
-import 'package:aplicationnn/screens/auth/start.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -12,10 +12,6 @@ class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-
-
-
-
   State<MyApp> createState() => _MyAppState();
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();

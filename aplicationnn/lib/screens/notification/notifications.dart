@@ -17,7 +17,6 @@ class _NotificationPageState extends State<NotificationPage> {
   bool isNotificationLoading = false;
   List? notificationList;
   bool isSwitched = false;
-  String url = "http://185.88.175.96:";
 
   @override
   void initState() {

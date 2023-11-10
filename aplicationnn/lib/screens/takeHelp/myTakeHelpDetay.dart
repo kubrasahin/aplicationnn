@@ -17,7 +17,6 @@ class _MyTalkHelpDetayState extends State<MyTalkHelpDetay> {
   var orderDetail;
   String? variantUnit, variantId, currency, description;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String url = "http://93.180.135.152:8080";
   int? groupValue = 0;
   bool? sizeSelect = false,
       getTokenValue = false,

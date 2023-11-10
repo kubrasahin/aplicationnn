@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../id.dart';
 import '../../services/userService.dart';
 import '../dropdown/settings.dart';
 
@@ -21,7 +22,6 @@ class _IphoneSettingScreenState extends State<IphoneSettingScreen> {
   bool isProductLoading = false, isCategoryLoading = false;
   static var UserDetail;
   int _selectedIndex = 0;
-  String url = "http://185.88.175.96:";
   var maskFormatter = MaskTextInputFormatter(
       mask: '+###########',
       filter: {
@@ -62,7 +62,7 @@ class _IphoneSettingScreenState extends State<IphoneSettingScreen> {
       String? basic = basicAuth.getString('basic');
       SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
-      var res = await http.put(Uri.parse(url + "/rest/user-upMobileNumber"),
+      var res = await http.put(Uri.parse(Id + "/rest/user-upMobileNumber"),
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',

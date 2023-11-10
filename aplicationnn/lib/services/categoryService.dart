@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../id.dart';
+
 class CategoryService {
-  static String url = "http://185.88.175.96:";
   static Future getCategory() async {
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
     String? basic = basicAuth.getString('basic');
@@ -11,7 +12,7 @@ class CategoryService {
     String? tokenn = token.getString('token');
     print(token);
     return await http.get(
-      Uri.parse(url + "/rest/category-list"),
+      Uri.parse(Id  + "/rest/category-list"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -30,7 +31,7 @@ class CategoryService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/category-detail/$categoryId"),
+      Uri.parse(Id  + "/rest/category-detail/$categoryId"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -49,7 +50,7 @@ class CategoryService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/category-listAll"),
+      Uri.parse(Id  + "/rest/category-listAll"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -68,7 +69,7 @@ class CategoryService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/subcategory-listAll"),
+      Uri.parse(Id  + "/rest/subcategory-listAll"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -87,7 +88,7 @@ class CategoryService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/subcategory-detail/$subCategoryId"),
+      Uri.parse(Id  + "/rest/subcategory-detail/$subCategoryId"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -105,7 +106,7 @@ class CategoryService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/subcategory-listByCategoryId/$categoryId"),
+      Uri.parse(Id  + "/rest/subcategory-listByCategoryId/$categoryId"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

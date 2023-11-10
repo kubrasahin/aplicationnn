@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../id.dart';
+
 class UserService {
-  static String url = "http://185.88.175.96:";
 // Kullanıcı detayı
   static Future<Map<String, dynamic>> getUserDetay() async {
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
@@ -11,7 +12,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-detail"),
+      Uri.parse(Id  + "/rest/user-detail"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -30,7 +31,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-detail/$id"),
+      Uri.parse(Id  + "/rest/user-detail/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -45,7 +46,7 @@ class UserService {
   //Kullanıcı Kayıtı
   static Future signin(body) async {
     return http
-        .post(Uri.parse(url + "/registration/user-create"),
+        .post(Uri.parse(Id  + "/registration/user-create"),
             headers: {
               'Content-Type': 'application/json; charset=UTF-8',
               'Accept': 'application/json',
@@ -63,7 +64,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/product-list"),
+      Uri.parse(Id  + "/rest/product-list"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -82,7 +83,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/product-list"),
+      Uri.parse(Id  + "/rest/product-list"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -101,7 +102,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/product-list"),
+      Uri.parse(Id  + "/rest/product-list"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -120,7 +121,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-followers"),
+      Uri.parse(Id  + "/rest/user-followers"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -139,7 +140,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-followings"),
+      Uri.parse(Id  + "/rest/user-followings"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -158,7 +159,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.put(
-      Uri.parse(url + "/rest/user-follow/$id"),
+      Uri.parse(Id  + "/rest/user-follow/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -177,7 +178,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.put(
-      Uri.parse(url + "/rest/user-follow/$id"),
+      Uri.parse(Id + "/rest/user-follow/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -196,7 +197,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-isFollowing/$id"),
+      Uri.parse(Id  + "/rest/user-isFollowing/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -215,7 +216,7 @@ class UserService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(url + "/rest/user-listStatusFalse"),
+      Uri.parse(Id  + "/rest/user-listStatusFalse"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
