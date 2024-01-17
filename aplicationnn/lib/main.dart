@@ -1,7 +1,9 @@
 import 'package:aplicationnn/classes/language.constants.dart';
 import 'package:aplicationnn/screens/auth/login.dart';
+import 'package:aplicationnn/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +36,11 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
+  Future<String?> getToken() async {
+    SharedPreferences token = await SharedPreferences.getInstance();
+    return token.getString('token');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +50,21 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
-      home: const LoginScreen(),
+      home: FutureBuilder<String?>(
+        future: getToken(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else {
+            String? tokenn = snapshot.data;
+            return tokenn == null
+                ? LoginScreen()
+                : HomeeScreen(
+                    currentIndex: 0,
+                  );
+          }
+        },
+      ),
     );
   }
 }

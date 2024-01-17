@@ -1,22 +1,21 @@
+import 'dart:convert';
+
+import 'package:aplicationnn/classes/language.constants.dart';
 import 'package:aplicationnn/screens/auth/tabController.dart';
 import 'package:aplicationnn/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import '../../classes/language.dart';
 import '../../id.dart';
 import '../../main.dart';
 import '../admin/adminHome.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../classes/language.dart';
-import 'package:aplicationnn/classes/language.constants.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../notification/notifications.dart';
 import 'forgotpassword.dart';
-import 'otpTwo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen>
   final userController = TextEditingController();
   final passwordController = TextEditingController();
   String? getMobileNumber, getPassword;
-
 
   late AnimationController lottieController;
 
@@ -51,8 +49,7 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
-
-  setupOneSignal()async{
+  setupOneSignal() async {
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
     OneSignal.shared.setAppId("252114c9-9268-4c06-9841-f7b3bb31c0ab");
     OneSignal.shared
@@ -60,29 +57,30 @@ class _LoginScreenState extends State<LoginScreen>
         .then((accepted) {
       debugPrint("Accepted permission: $accepted");
     });
-    await OneSignal.shared.promptUserForPushNotificationPermission(fallbackToSettings: true);
+    await OneSignal.shared
+        .promptUserForPushNotificationPermission(fallbackToSettings: true);
     var deviceState = await OneSignal.shared.getDeviceState();
     var pushToken = deviceState!.userId;
 
     print("OneSignal Push Aboneliği Token: $pushToken");
     SharedPreferences playerId = await SharedPreferences.getInstance();
     playerId.setString('playerId', pushToken!);
-    OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result){
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
       //kullanıcı bildirime tıkladığında sonuc döndürüyor
       print("vERİİİİİİİİİİİİİİİİİ");
       print(result.notification.androidNotificationId);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationPage()));
-
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => NotificationPage()));
     });
   }
 
-
-  sendPlayerId() async{
+  sendPlayerId() async {
     SharedPreferences playerId = await SharedPreferences.getInstance();
     String? playerIdd = playerId.getString('playerId');
     Map<String, dynamic> body = {
-      "playerId":playerIdd,
+      "playerId": playerIdd,
     };
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
     String? basic = basicAuth.getString('basic');
@@ -92,21 +90,17 @@ class _LoginScreenState extends State<LoginScreen>
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
-          "Access-Control-Allow-Headers":
-          "Access-Control-Allow-Origin, Accept",
+          "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
           'Authorization': 'Bearer' + tokenn!,
         },
         body: jsonEncode(body));
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
-
     } else {
       showMessageInScaffold(
-         " AppLocalizations.of(context)!.errorOccurredOnUpdate");
-
+          " AppLocalizations.of(context)!.errorOccurredOnUpdate");
     }
   }
-
 
   var maskFormatter = MaskTextInputFormatter(
       mask: '+##########',
@@ -117,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen>
       type: MaskAutoCompletionType.lazy);
 
   signIn(String user, String password) async {
-      if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, dynamic> body = {
         "mobileNumber": user,
         "password": password,
@@ -134,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen>
           },
           body: jsonEncode(body));
       var response = json.encode(res.body);
-      print(response);
+      print(res.statusCode);
       if (res.statusCode == 200) {
         SharedPreferences token = await SharedPreferences.getInstance();
         token.setString('token', response);
@@ -155,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen>
         var ress = json.encode(res.body);
         SharedPreferences rol = await SharedPreferences.getInstance();
         rol.setString('rol', res.body);
-        print(res.body);
+
         if (res.body == "ADMIN") {
           Navigator.push(
               context,
@@ -255,7 +249,8 @@ class _LoginScreenState extends State<LoginScreen>
                     Align(
                       alignment: Alignment.topRight,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 30),
                         child: DropdownButton<Language>(
                           underline: const SizedBox(),
                           icon: const Icon(
@@ -294,14 +289,14 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 Container(
                   // group48kgw (2:25)
-                
+
                   width: double.infinity,
                   height: 164 * fem,
                   child: Stack(
                     children: [
                       Positioned(
                         // imageT5Z (2:2)
-                      
+
                         child: Align(
                           alignment: Alignment.center,
                           child: SizedBox(
@@ -338,7 +333,7 @@ class _LoginScreenState extends State<LoginScreen>
                               builder: (context) => const NumberPage()));
                     },
                     child: Text(
-                     AppLocalizations.of(context)!.forgotMyPassword,
+                      AppLocalizations.of(context)!.forgotMyPassword,
                       style: TextStyle(color: Colors.white),
                     )),
                 buildRowRegister()

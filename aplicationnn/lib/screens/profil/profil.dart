@@ -1,8 +1,6 @@
-import 'package:aplicationnn/screens/product/productAdd.dart';
 import 'package:aplicationnn/screens/product/productAddTwo.dart';
 import 'package:aplicationnn/screens/product/product_deall.dart';
 import 'package:aplicationnn/services/productService.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -57,7 +55,7 @@ class _UseProfilState extends State<UseProfil> {
       if (mounted) {
         setState(() {
           UserDetail = value;
-          print( UserDetail["role"]);
+          print(UserDetail["role"]);
           print(UserDetail);
           isProfilDetail = true;
         });
@@ -94,6 +92,7 @@ class _UseProfilState extends State<UseProfil> {
       if (mounted) {
         setState(() {
           addFollowing = value;
+          print("Merhaba");
           print(addFollowing);
           isAddFollowing = true;
           getFollowingg();
@@ -143,7 +142,7 @@ class _UseProfilState extends State<UseProfil> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 30),
                         child: Container(
-                            height:220,
+                            height: 220,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30),
                                 color: Color(0xff2b2e83)),
@@ -339,150 +338,170 @@ class _UseProfilState extends State<UseProfil> {
                                 backgroundColor: Color(0x33e6eefa),
                               ),
                             ),
-                      UserDetail["institutional"] == true ? Positioned(
-                        bottom: -5,
-                        child:  Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            following == false
-                                ? Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                                  child: Container(
-width: 120,
-                              decoration: BoxDecoration(
-                                    color: Color(0x33e6eefa),
-                                    borderRadius: BorderRadius.circular(20)),
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 10),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        AddFollowingg();
-                                      },
-                                      child: Text(
-                                        AppLocalizations.of(context)!.follows,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xffffffff),
-                                        ),
-                                      )),
-                              ),
-                            ),
-                                )
-                                : Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                                  child: Container(
-                              decoration: BoxDecoration(
-                                    color: Color(0xffffffff),
-                                    borderRadius: BorderRadius.circular(20)),
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 10),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        AddFollowingg();
-                                      },
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .beingFollowed,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xff2b2e83),
-                                        ),
-                                      )),
-                              ),
-                            ),
-                                ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: Container(
-                                width: 120,
-                                decoration: BoxDecoration(
-                                    color: Color(0xffffffff),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 5, vertical: 10),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ProductAddTwo( userid:UserDetail["id"] ,)
+                      UserDetail["institutional"] == true
+                          ? Positioned(
+                              bottom: -5,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  following == false
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Container(
+                                            width: 120,
+                                            decoration: BoxDecoration(
+                                                color: Color(0x33e6eefa),
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 10),
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    AddFollowingg();
+                                                  },
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .follows,
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontFamily: "Poppins",
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Color(0xffffffff),
+                                                    ),
+                                                  )),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                      child: Text( "Ürün Askıla",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: "Poppins",
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xff2b2e83),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Color(0xffffffff),
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 10),
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    AddFollowingg();
+                                                  },
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .beingFollowed,
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontFamily: "Poppins",
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Color(0xff2b2e83),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ),
                                         ),
-                                      )),
-                                ),
-                              ),
-                            ),
-
-                          ],
-                        )
-                      ) :
-                      Positioned(
-                        bottom: -10,
-                        child: following == false
-                            ? Container(
-                          width: 120,
-                          decoration: BoxDecoration(
-                              color: Color(0x33e6eefa),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 10),
-                            child: TextButton(
-                                onPressed: () {
-                                  AddFollowingg();
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!.follows,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff2b2e83),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
+                                    child: Container(
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xffffffff),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 10),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ProductAddTwo(
+                                                          userid:
+                                                              UserDetail["id"],
+                                                        )),
+                                              );
+                                            },
+                                            child: Text(
+                                              "Ürün Askıla",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff2b2e83),
+                                              ),
+                                            )),
+                                      ),
+                                    ),
                                   ),
-                                )),
-
-                          ),
-                        )
-                            : Container(
-                          width: 120,
-                          decoration: BoxDecoration(
-                              color: Color(0xffffffff),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 10),
-                            child: TextButton(
-                                onPressed: () {
-                                  AddFollowingg();
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .beingFollowed,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: "Poppins",
-                                    fontWeight: FontWeight.w700,
-                                    color: Color(0xff2b2e83),
-                                  ),
-                                )),
-                          ),
-                        )
-                      )
+                                ],
+                              ))
+                          : Positioned(
+                              bottom: -10,
+                              child: following == false
+                                  ? Container(
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                          color: Color(0x33e6eefa),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 10),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              AddFollowingg();
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .follows,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff2b2e83),
+                                              ),
+                                            )),
+                                      ),
+                                    )
+                                  : Container(
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xffffffff),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 10),
+                                        child: TextButton(
+                                            onPressed: () {
+                                              AddFollowingg();
+                                            },
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .beingFollowed,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: "Poppins",
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff2b2e83),
+                                              ),
+                                            )),
+                                      ),
+                                    ))
                     ],
                   ),
                   /* Row(
@@ -504,7 +523,7 @@ width: 120,
                               side: BorderSide(
                                   color: Color(0xff030116), width: 1),
                               borderRadius: BorderRadius.circular(40)),
-                          child:   Padding(
+                          child: Padding(
                             padding: const EdgeInsets.all(2.0),
                             child: MasonryGridView.builder(
                                 crossAxisSpacing: 8,
