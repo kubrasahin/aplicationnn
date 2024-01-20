@@ -1,17 +1,18 @@
 import 'dart:convert';
+
 import 'package:aplicationnn/screens/auth/login.dart';
-import 'package:aplicationnn/screens/auth/start.dart';
 import 'package:flutter/material.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:otp_text_field/otp_field.dart';
+import 'package:otp_text_field/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../id.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final bool? institutional;
+  const OtpScreen({super.key, this.institutional});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -39,7 +40,15 @@ class _OtpScreenState extends State<OtpScreen> {
         },
         body: jsonEncode(body));
     var response = json.encode(res.body);
-    if (res.body == "Your phone number has been successfully verified! ") {
+    if (res.body == "Your phone number has been successfully verified! " ||
+        widget.institutional == true) {
+      showMessageInScaffold(
+          "Admine kayıtınız iletilmiştir Onayını Beklemelisiniz");
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    } else if (res.body ==
+            "Your phone number has been successfully verified! " ||
+        widget.institutional == false) {
       showMessageInScaffold(
           AppLocalizations.of(context)!.userRegistrationSuccessful);
     } else if (res.body == "The code is not found!") {

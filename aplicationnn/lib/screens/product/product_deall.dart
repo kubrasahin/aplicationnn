@@ -1,14 +1,15 @@
 import 'dart:convert';
 
+import 'package:aplicationnn/screens/home.dart';
 import 'package:aplicationnn/screens/profil/profil.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../id.dart';
 import '../../services/productService.dart';
-import '../takeHelp/myTake.dart';
-import 'package:http/http.dart' as http;
 
 class ProductDeal extends StatefulWidget {
   final String? productID;
@@ -63,7 +64,7 @@ class _ProductDealState extends State<ProductDeal> {
         body: jsonEncode(buyNowProduct));
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
-    showSnackbar("Ürünü Aldınız Kodunuz:2323232321");
+      showSnackbar("Ürünü Aldınız Kodunuz:2323232321");
     } else if (res.statusCode == 400) {
       showMessageInScaffold(
           AppLocalizations.of(context)!.youCannoBuyYourOwnProduct);
@@ -191,10 +192,10 @@ class _ProductDealState extends State<ProductDeal> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Askıda"),
-                )
+                Text(
+                  AppLocalizations.of(context)!.hanging,
+                  style: TextStyle(color: Colors.white),
+                ),
               ]),
         ),
       ),
@@ -206,48 +207,58 @@ class _ProductDealState extends State<ProductDeal> {
                   clipBehavior: Clip.none,
                   children: [
                     Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(fit: BoxFit.cover,
-                              image: NetworkImage(productDetail['imageUrl'])),
-                        ),
-                        height: MediaQuery.of(context).size.height / 3,
-                        width: MediaQuery.of(context).size.width,
-                        ),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(productDetail['imageUrl'])),
+                      ),
+                      height: MediaQuery.of(context).size.height / 3,
+                      width: MediaQuery.of(context).size.width,
+                    ),
                     Positioned(
                       bottom: -25,
                       left: 3,
                       child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UseProfil(
-                                          companyId:
-                                              productDetail['companyId'],
-                                        )));
+                          onTap: () async {
+                            SharedPreferences id =
+                                await SharedPreferences.getInstance();
+                            String? userId = id.getString('userId');
+                            userId == productDetail['companyId']
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeeScreen(
+                                              currentIndex: 3,
+                                            )))
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UseProfil(
+                                              companyId:
+                                                  productDetail['companyId'],
+                                            )));
                           },
                           child: CircleAvatar(
                             radius: 40,
                             child: ClipOval(
-                              child: productDetail['companyImageUrl'] == null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                        image: AssetImage(
-                                          'assets/askida.png',
-                                        ),
+                                child: productDetail['companyImageUrl'] == null
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                          image: AssetImage(
+                                            'assets/askida.png',
+                                          ),
+                                        )),
+                                      )
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                            productDetail['companyImageUrl'],
+                                          ),
+                                        )),
                                       )),
-                                    )
-                                  :Container(
-    decoration: BoxDecoration(
-    image: DecorationImage(fit: BoxFit.cover,
-    image: NetworkImage(
-    productDetail['companyImageUrl'],
-
-    ),
-    )),
-    )
-                            ),
                           )),
                     ),
                   ],
@@ -312,33 +323,43 @@ class _ProductDealState extends State<ProductDeal> {
                             Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 15, left: 8, right: 8),
-                              child: Text(productDetail['description'], style: const TextStyle(
-                                  color: Colors.white, fontSize: 18),),
+                              child: Text(
+                                productDetail['description'],
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 15, left: 8, right: 8),
-                              child: Row( mainAxisAlignment: MainAxisAlignment.start,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(productDetail['productStock'].toString(), style: const TextStyle(
-                                      color: Colors.white, fontSize: 18),),
+                                  Text(
+                                    productDetail['productStock'].toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text("Adet", style: const TextStyle(
-                                        color: Colors.white, fontSize: 18),),
+                                    child: Text(
+                                      "Adet",
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.only(
                                   bottom: 15, left: 8, right: 8),
-                              child: Text(productDetail['companyName'], style: const TextStyle(
-                                  color: Colors.white, fontSize: 18),),
+                              child: Text(
+                                productDetail['companyName'],
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ),
-
-
                           ],
                         ),
                       ),

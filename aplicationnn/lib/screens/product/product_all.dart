@@ -28,12 +28,13 @@ class _ProductAllState extends State<ProductAll> {
       selectedSubCategoryIndex;
   String? currency;
   List? productsList, subCategoryList;
+
   @override
   void initState() {
-    getProductsList();
     getCategoryIdSubCategoryList();
-    methodCallsInitiate();
     getProductsList();
+    methodCallsInitiate();
+
     super.initState();
   }
 
@@ -49,9 +50,6 @@ class _ProductAllState extends State<ProductAll> {
     await ProductService.getCategoriProducts(widget.categoryId).then((onValue) {
       if (mounted) {
         productsList = onValue['body']['content'];
-        print("object");
-        print(productsList);
-        print("object");
       }
     }).catchError((error) {
       if (mounted) {
@@ -69,8 +67,6 @@ class _ProductAllState extends State<ProductAll> {
       if (mounted) {
         setState(() {
           subCategoryList = onValue;
-          print("SUBCATEGORY");
-          print(subCategoryList);
         });
       }
     }).catchError((error) {});
@@ -83,7 +79,6 @@ class _ProductAllState extends State<ProductAll> {
       if (mounted) {
         setState(() {
           productsList = onValue['body']['content'];
-          print(productsList);
         });
       }
     }).catchError((error) {
@@ -119,7 +114,10 @@ class _ProductAllState extends State<ProductAll> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Askıda"),
+                  child: Text(
+                    AppLocalizations.of(context)!.hanging,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               ]),
         ),
@@ -164,14 +162,13 @@ class _ProductAllState extends State<ProductAll> {
                                     (int index) {
                                       return index != 0
                                           ? Tab(
-                                          text: subCategoryList![index - 1]
-                                          ['title'],
-                                      )
+                                              text: subCategoryList![index - 1]
+                                                  ['title'],
+                                            )
                                           : Tab(
-                                          text:
-                                          AppLocalizations.of(context)!
-                                          .all
-                                            );
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .all);
                                     },
                                   ),
                                 ),
@@ -199,10 +196,6 @@ class _ProductAllState extends State<ProductAll> {
                                   productData: productsList![index],
                                 )),
                           );
-
-
-
-
                         }),
                   ),
                 ],

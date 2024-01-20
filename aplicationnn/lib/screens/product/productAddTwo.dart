@@ -1,21 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:aplicationnn/screens/home.dart';
-import 'package:aplicationnn/screens/product/productSettings.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../id.dart';
 import '../../services/categoryService.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
-
 import '../profil/profil.dart';
 
 class ProductAddTwo extends StatefulWidget {
   final userid;
-  ProductAddTwo({super.key,  this.userid});
+  ProductAddTwo({super.key, this.userid});
 
   @override
   State<ProductAddTwo> createState() => _ProductAddTwoState();
@@ -45,8 +44,8 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
 
   getCategoryIdSubCategoryList() async {
     await CategoryService.getCategoryIdSubCategory(valcategory == 0
-        ? categoryList![0]["id"]
-        : categoryList![valcategory!]["id"])
+            ? categoryList![0]["id"]
+            : categoryList![valcategory!]["id"])
         .then((onValue) {
       if (mounted) {
         setState(() {
@@ -95,7 +94,7 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
       };
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse(Id+ "/rest/product-userAdd/$userid"),
+        Uri.parse(Id + "/rest/product-userAdd/$userid"),
       );
       /* SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
@@ -108,7 +107,7 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
         "description": description.toString(),
         "categoryId": categoryList![valcategory!]["id"].toString(),
         "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
-        "categoryName":  categoryList![valcategory!]["title"].toString(),
+        "categoryName": categoryList![valcategory!]["title"].toString(),
         "subCategoryName": subCategoryList![_selectedIndex]["title"].toString(),
         "productStock": stock.toString(),
         "keyWords": keyword.toString(),
@@ -123,7 +122,7 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
       List<int> list = data.cast();
       print(list);
       var multipartFile =
-      http.MultipartFile.fromBytes('file', list, filename: image!.path);
+          http.MultipartFile.fromBytes('file', list, filename: image!.path);
       request.files.add(multipartFile);
       print(image!.path);
       print(body);
@@ -131,14 +130,13 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
       var response = await request.send();
       print(response.statusCode);
       if (response.statusCode == 200) {
-        showMessageInScaffoldTwo(
-           "Ürün Kurumun Onayına Gönderilmiştir");
+        showMessageInScaffoldTwo("Ürün Kurumun Onayına Gönderilmiştir");
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => UseProfil(
-                  companyId: widget.userid,
-                )));
+                      companyId: widget.userid,
+                    )));
       } else {
         showMessageInScaffoldTwo(AppLocalizations.of(context)!.error);
       }
@@ -175,7 +173,7 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
                 child: TextButton(
                     style: ButtonStyle(
                       foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
+                          MaterialStateProperty.all<Color>(Colors.black),
                     ),
                     onPressed: () {},
                     child: Text(AppLocalizations.of(context)!.close)),
@@ -228,7 +226,10 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Askıda"),
+                  child: Text(
+                    AppLocalizations.of(context)!.hanging,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               ]),
         ),
@@ -236,339 +237,339 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
       body: categoryList == null
           ? const Center(child: CircularProgressIndicator())
           : Form(
-        key: _formKey,
-        child: Container(
-            decoration: BoxDecoration(
-                color: Color(0xff030116),
-                borderRadius: BorderRadius.circular(5)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Haydi Askıla",
-                        style: TextStyle(
-                            color: Color(0xffffffff),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ),
-                  ),
-                  image != null
-                      ? Align(
-                    alignment: Alignment.center,
-
-                    child: Stack(
+              key: _formKey,
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Color(0xff030116),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-
-                          child: Image.file(  File(image!.path),
-                            fit: BoxFit.cover,
-                            height: 150,
-                            width: 150,
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "Haydi Askıla",
+                              style: TextStyle(
+                                  color: Color(0xffffffff),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
                           ),
                         ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
+                        image != null
+                            ? Align(
+                                alignment: Alignment.center,
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: Image.file(
+                                        File(image!.path),
+                                        fit: BoxFit.cover,
+                                        height: 150,
+                                        width: 150,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade500,
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            PickImage(ImageSource.gallery);
+                                          },
+                                          icon: Icon(Icons.camera_alt),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(0.9),
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.shade500,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                PickImage(ImageSource.gallery);
+                                              },
+                                              icon: Icon(Icons.camera_alt),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                                AppLocalizations.of(context)!.photoAttachments,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20)),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 2),
                           child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade500,
-                                borderRadius:
-                                BorderRadius.circular(
-                                    30.0)),
-                            child: IconButton(
-                              onPressed: () {
-                                PickImage(ImageSource.gallery);
+                            height: 70,
+                            child: TextFormField(
+                              style: TextStyle(color: Color(0xff2daae1)),
+                              onSaved: (String? value) {
+                                title = value;
                               },
-                              icon: Icon(Icons.camera_alt),
+                              keyboardType: TextInputType.text,
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .enterProductName;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  helperText: ' ',
+                                  fillColor: Color(0xff030116),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.all(5.0),
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterProductName,
+                                  hintStyle: const TextStyle(
+                                      color: Color(0xffffffff), fontSize: 16),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red))),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 2),
+                          child: Container(
+                            height: 70,
+                            child: TextFormField(
+                              style: TextStyle(color: Color(0xff2daae1)),
+                              onSaved: (String? value) {
+                                description = value;
+                              },
+                              keyboardType: TextInputType.text,
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .descriptionProduct;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  helperText: ' ',
+                                  fillColor: Color(0xff030116),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.all(5.0),
+                                  hintText: AppLocalizations.of(context)!
+                                      .descriptionProduct,
+                                  hintStyle: const TextStyle(
+                                      color: Color(0xffffffff), fontSize: 16),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red))),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 2),
+                          child: Container(
+                            height: 70,
+                            child: TextFormField(
+                              style: TextStyle(color: Color(0xff2daae1)),
+                              onSaved: (String? value) {
+                                keyword = value;
+                              },
+                              keyboardType: TextInputType.text,
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .enterAKeywordForTheProduct;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  helperText: ' ',
+                                  fillColor: Color(0xff030116),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.all(5.0),
+                                  hintText: AppLocalizations.of(context)!
+                                      .enterAKeywordForTheProduct,
+                                  hintStyle: const TextStyle(
+                                      color: Color(0xffffffff), fontSize: 16),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red))),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 2),
+                          child: Container(
+                            height: 70,
+                            child: TextFormField(
+                              style: TextStyle(color: Color(0xff2daae1)),
+                              onSaved: (String? value) {
+                                stock = value;
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9]")),
+                              ],
+                              controller: stockcontroller,
+                              keyboardType: TextInputType.number,
+                              validator: (String? value) {
+                                if (value!.isEmpty) {
+                                  return AppLocalizations.of(context)!
+                                      .inventoryOfProduct;
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  helperText: ' ',
+                                  fillColor: Color(0xff030116),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.all(5.0),
+                                  hintText: AppLocalizations.of(context)!
+                                      .inventoryOfProduct,
+                                  hintStyle: const TextStyle(
+                                      color: Color(0xffffffff), fontSize: 16),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xff2daae1),
+                                      )),
+                                  errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide:
+                                          const BorderSide(color: Colors.red))),
+                            ),
+                          ),
+                        ),
+                        buildDropField(),
+                        const Divider(),
+                        InkWell(
+                          onTap: () {
+                            valcategory == null
+                                ? showMessageInScaffoldTwo(
+                                    "Lütfen kategoriyi seçiniz")
+                                : saveProduct(widget.userid);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 30),
+                            child: Container(
+                              height: 40,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color(0xffef6328),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(
+                                    child: Text(
+                                  AppLocalizations.of(context)!.save,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                )),
+                              ),
                             ),
                           ),
                         ),
                       ],
-                    ),)
-
-                      : Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        height: 150,
-                        width: 150,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.9),
-                            borderRadius:
-                            BorderRadius.circular(20)),
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey.shade500,
-                                    borderRadius:
-                                    BorderRadius.circular(
-                                        30.0)),
-                                child: IconButton(
-                                  onPressed: () {
-                                    PickImage(ImageSource.gallery);
-                                  },
-                                  icon: Icon(Icons.camera_alt),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                          AppLocalizations.of(context)!.photoAttachments,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 20)),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 2),
-                    child: Container(
-                      height: 70,
-                      child: TextFormField(
-                        style: TextStyle(color: Color(0xff2daae1)),
-                        onSaved: (String? value) {
-                          title = value;
-                        },
-                        keyboardType: TextInputType.text,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return AppLocalizations.of(context)!
-                                .enterProductName;
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            helperText: ' ',
-                            fillColor: Color(0xff030116),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(5.0),
-                            hintText: AppLocalizations.of(context)!
-                                .enterProductName,
-                            hintStyle: const TextStyle(
-                                color: Color(0xffffffff), fontSize: 16),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red))),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 2),
-                    child: Container(
-                      height: 70,
-                      child: TextFormField(
-                        style: TextStyle(color: Color(0xff2daae1)),
-                        onSaved: (String? value) {
-                          description = value;
-                        },
-                        keyboardType: TextInputType.text,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return AppLocalizations.of(context)!
-                                .descriptionProduct;
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            helperText: ' ',
-                            fillColor: Color(0xff030116),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(5.0),
-                            hintText: AppLocalizations.of(context)!
-                                .descriptionProduct,
-                            hintStyle: const TextStyle(
-                                color: Color(0xffffffff), fontSize: 16),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red))),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 2),
-                    child: Container(
-                      height: 70,
-                      child: TextFormField(
-                        style: TextStyle(color: Color(0xff2daae1)),
-                        onSaved: (String? value) {
-                          keyword = value;
-                        },
-                        keyboardType: TextInputType.text,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return AppLocalizations.of(context)!
-                                .enterAKeywordForTheProduct;
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            helperText: ' ',
-                            fillColor: Color(0xff030116),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(5.0),
-                            hintText: AppLocalizations.of(context)!
-                                .enterAKeywordForTheProduct,
-                            hintStyle: const TextStyle(
-                                color: Color(0xffffffff), fontSize: 16),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red))),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 2),
-                    child: Container(
-                      height: 70,
-                      child: TextFormField(
-                        style: TextStyle(color: Color(0xff2daae1)),
-                        onSaved: (String? value) {
-                          stock = value;
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp("[0-9]")),
-                        ],
-                        controller: stockcontroller,
-                        keyboardType: TextInputType.number,
-                        validator: (String? value) {
-                          if (value!.isEmpty) {
-                            return  AppLocalizations.of(context)!
-                                .inventoryOfProduct;
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            helperText: ' ',
-                            fillColor: Color(0xff030116),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(5.0),
-                            hintText: AppLocalizations.of(context)!
-                                .inventoryOfProduct,
-                            hintStyle: const TextStyle(
-                                color: Color(0xffffffff), fontSize: 16),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color(0xff2daae1),
-                                )),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red)),
-                            focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide:
-                                const BorderSide(color: Colors.red))),
-                      ),
-                    ),
-                  ),
-                  buildDropField(),
-                  const Divider(),
-                  InkWell(
-                    onTap: () {
-                      valcategory==null? showMessageInScaffoldTwo("Lütfen kategoriyi seçiniz") :
-                      saveProduct(widget.userid);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Container(
-                        height: 40,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Color(0xffef6328),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                              child: Text(
-                                AppLocalizations.of(context)!.save,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              )),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )),
-      ),
+                  )),
+            ),
     );
   }
 
@@ -636,19 +637,19 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
                   padding: const EdgeInsets.all(10),
                   child: valcategory == null
                       ? Text(
-                    AppLocalizations.of(context)!
-                        .selectTheCategoryOfTheProduct,
-                    style: const TextStyle(
-                        color: Color(0xffffffff), fontSize: 16),
-                  )
+                          AppLocalizations.of(context)!
+                              .selectTheCategoryOfTheProduct,
+                          style: const TextStyle(
+                              color: Color(0xffffffff), fontSize: 16),
+                        )
                       : Text(categoryList![valcategory!]["title"],
-                      style: TextStyle(color: Color(0xffffffff))))),
+                          style: TextStyle(color: Color(0xffffffff))))),
         ),
         subCategoryList == null
             ? Container()
             : valcategory == null
-            ? Container()
-            : subCategoriWidget(),
+                ? Container()
+                : subCategoriWidget(),
       ],
     );
   }
@@ -678,7 +679,7 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
               contentPadding: EdgeInsets.all(5.0),
               hintText: name,
               hintStyle:
-              const TextStyle(color: Color(0xffffffff), fontSize: 16),
+                  const TextStyle(color: Color(0xffffffff), fontSize: 16),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(
@@ -718,7 +719,7 @@ class _ProductAddTwoState extends State<ProductAddTwo> {
                     child: Container(
                         decoration: BoxDecoration(
                             color: _selectedIndex != null &&
-                                _selectedIndex == index
+                                    _selectedIndex == index
                                 ? Color(0xff2daae1)
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(10)),

@@ -1,18 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:aplicationnn/screens/home.dart';
-import 'package:aplicationnn/screens/product/productSettings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../id.dart';
 import '../../services/categoryService.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
 
 class ProductAdd extends StatefulWidget {
-   ProductAdd({super.key,});
+  ProductAdd({
+    super.key,
+  });
 
   @override
   State<ProductAdd> createState() => _ProductAddState();
@@ -77,12 +80,24 @@ class _ProductAddState extends State<ProductAdd> {
     });
   }
 
+  PickImage(ImageSource source) async {
+    try {
+      image = await ImagePicker().pickImage(
+        source: source,
+      );
+      if (image != null) {
+        setState(() {
+          selectedFileName = image!.path;
+        });
+      }
+    } on PlatformException catch (e) {}
+  }
+
   saveProduct() async {
-    isButtonDisabled=true;
+    isButtonDisabled = true;
 
     final form = _formKey.currentState!;
     if (_formKey.currentState!.validate()) {
-
       form.save();
 
       SharedPreferences token = await SharedPreferences.getInstance();
@@ -96,7 +111,7 @@ class _ProductAddState extends State<ProductAdd> {
       };
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse(Id+ "/rest/product-create"),
+        Uri.parse(Id + "/rest/product-create"),
       );
       /* SharedPreferences token = await SharedPreferences.getInstance();
       String? tokenn = token.getString('token');
@@ -109,7 +124,7 @@ class _ProductAddState extends State<ProductAdd> {
         "description": description.toString(),
         "categoryId": categoryList![valcategory!]["id"].toString(),
         "subCategoryId": subCategoryList![_selectedIndex]["id"].toString(),
-        "categoryName":  categoryList![valcategory!]["title"].toString(),
+        "categoryName": categoryList![valcategory!]["title"].toString(),
         "subCategoryName": subCategoryList![_selectedIndex]["title"].toString(),
         "productStock": stock.toString(),
         "keyWords": keyword.toString(),
@@ -122,7 +137,6 @@ class _ProductAddState extends State<ProductAdd> {
       request.headers.addAll(headers);
       Uint8List data = await this.image!.readAsBytes();
       List<int> list = data.cast();
-      print(list);
       var multipartFile =
           http.MultipartFile.fromBytes('file', list, filename: image!.path);
       request.files.add(multipartFile);
@@ -186,24 +200,6 @@ class _ProductAddState extends State<ProductAdd> {
         });
   }
 
-  PickImage(ImageSource source) async {
-    try {
-      image = await ImagePicker().pickImage(
-        source: source,
-      );
-      if (image != null) {
-        setState(() {
-          selectedFileName = image!.path;
-          print(image!.name);
-        });
-      }
-      ;
-
-      final imageTempo = File(image!.path);
-      // setState(() => this.image = imageTempo as XFile?);
-    } on PlatformException catch (e) {}
-  }
-
   @override
   Widget build(BuildContext context) {
     double baseWidth = 650;
@@ -229,7 +225,10 @@ class _ProductAddState extends State<ProductAdd> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Askıda"),
+                  child: Text(
+                    AppLocalizations.of(context)!.hanging,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               ]),
         ),
@@ -261,40 +260,45 @@ class _ProductAddState extends State<ProductAdd> {
                         image != null
                             ? Align(
                                 alignment: Alignment.center,
-                               
                                 child: Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(30),
-                                          
-                                          child: Image.file(  File(image!.path),
-                                                                  fit: BoxFit.cover,
-                                                                  height: 150,
-                                    width: 150,
-                                                                  ),
-                                        ),
-                                        Positioned(
-                                          right: 0,
-                                          bottom: 0,
-                                          child: Container(
-                                            height: 40,
-                                            width: 40,
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey.shade500,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        30.0)),
-                                            child: IconButton(
-                                              onPressed: () {
-                                                PickImage(ImageSource.gallery);
-                                              },
-                                              icon: Icon(Icons.camera_alt),
+                                  children: [
+                                    Container(
+                                      height: 200,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(40),
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: FileImage(
+                                              File(image!.path),
                                             ),
-                                          ),
+                                          )),
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade500,
+                                            borderRadius:
+                                                BorderRadius.circular(30.0)),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              PickImage(ImageSource.gallery);
+                                            });
+                                          },
+                                          icon: Icon(Icons.camera_alt),
                                         ),
-                                      ],
-                                    ),)
-                              
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             : Align(
                                 alignment: Alignment.center,
                                 child: Container(
@@ -502,7 +506,7 @@ class _ProductAddState extends State<ProductAdd> {
                               keyboardType: TextInputType.number,
                               validator: (String? value) {
                                 if (value!.isEmpty) {
-                                  return  AppLocalizations.of(context)!
+                                  return AppLocalizations.of(context)!
                                       .inventoryOfProduct;
                                 } else {
                                   return null;
@@ -542,8 +546,10 @@ class _ProductAddState extends State<ProductAdd> {
                         const Divider(),
                         InkWell(
                           onTap: () {
-                            valcategory==null? showMessageInScaffoldTwo("Lütfen kategoriyi seçiniz") :
-                            saveProduct();
+                            valcategory == null
+                                ? showMessageInScaffoldTwo(
+                                    "Lütfen kategoriyi seçiniz")
+                                : saveProduct();
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -584,19 +590,21 @@ class _ProductAddState extends State<ProductAdd> {
         height: 50,
         width: 200,
         child: TextButton(
-            onPressed:() async{
-setState(() {
-  saveProduct();
-  isButtonDisabled=true;
-});},
-            child: isButtonDisabled==true? CircleAvatar(): Text(
-              AppLocalizations.of(context)!.save,
-              style: TextStyle(color: Colors.white, fontSize: 22),
-            )),
+            onPressed: () async {
+              setState(() {
+                saveProduct();
+                isButtonDisabled = true;
+              });
+            },
+            child: isButtonDisabled == true
+                ? CircleAvatar()
+                : Text(
+                    AppLocalizations.of(context)!.save,
+                    style: TextStyle(color: Colors.white, fontSize: 22),
+                  )),
       ),
     );
   }
-
 
   Widget buildDropField() {
     return Column(

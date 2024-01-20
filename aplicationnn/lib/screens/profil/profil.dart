@@ -537,23 +537,26 @@ class _UseProfilState extends State<UseProfil> {
                                 itemCount: productList!.length,
                                 itemBuilder: (context, index) {
                                   return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ProductDeal(
-                                            productID: productList![index]
-                                                ['id'],
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ProductDeal(
+                                              productID: productList![index]
+                                                  ['id'],
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: Image.network(
-                                          productList![index]["imageUrl"]),
-                                    ),
-                                  );
+                                        );
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: productList![index]
+                                                    ["imageUrl"] ==
+                                                null
+                                            ? Image.asset("assets/askida.png")
+                                            : Image.network(productList![index]
+                                                ["imageUrl"]),
+                                      ));
                                 }),
                           ),
                         )

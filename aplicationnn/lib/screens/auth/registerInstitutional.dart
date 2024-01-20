@@ -1,11 +1,12 @@
 import 'dart:convert';
+
 import 'package:aplicationnn/screens/auth/login.dart';
 import 'package:aplicationnn/screens/auth/otp.dart';
-import 'package:http/http.dart' as http;
 import 'package:aplicationnn/screens/auth/start.dart';
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../id.dart';
@@ -76,8 +77,12 @@ class _KurumsalUserState extends State<KurumsalUser> {
       if (res.body == "Your account has been successfully created!") {
         SharedPreferences mobile = await SharedPreferences.getInstance();
         mobile.setString('mobileNumber', mobileNumber.toString());
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const OtpScreen()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const OtpScreen(
+                      institutional: true,
+                    )));
       } else if (res.body == "Please confirm your account!") {
         showMessageInScaffold(
             AppLocalizations.of(context)!.userRegistrationNotActive);

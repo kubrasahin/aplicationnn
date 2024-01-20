@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:aplicationnn/screens/product/productSettings.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../id.dart';
-import '../../services/categoryService.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../id.dart';
 import '../../services/userService.dart';
 import '../auth/login.dart';
 import '../home.dart';
@@ -60,7 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   getLogouth() async {
     SharedPreferences token = await SharedPreferences.getInstance();
-      String? tokenn = token.getString('token');
+    String? tokenn = token.getString('token');
     var res = await http.post(
       Uri.parse(Id + "/logout"),
       headers: {
@@ -94,9 +93,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           selectedFileName = image!.path;
         });
       }
-
-
-
     } on PlatformException catch (e) {}
   }
 
@@ -110,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     var request = http.MultipartRequest(
       'PUT',
-      Uri.parse(Id +"/rest/image/upload"),
+      Uri.parse(Id + "/rest/image/upload"),
     );
     request.headers.addAll(headers);
     Uint8List data = await this.image!.readAsBytes();
@@ -281,7 +277,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Askıda"),
+                    child: Text(
+                      AppLocalizations.of(context)!.hanging,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   )
                 ]),
           ),
@@ -298,120 +297,129 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: ListView(
                         children: [
-                          image == null?
-                          UserDetail["imageUrl"] == null
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: CircleAvatar(
-                                      radius: 90.0,
-                                        backgroundImage: NetworkImage(
-                                            "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80"),
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            right: 5,
-                                            bottom: 5,
-                                            child: Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade500,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0)),
-                                              child: IconButton(
-                                                onPressed: () {
-                                                 setState(() {
-                                                   PickImage(
-                                                       ImageSource.gallery);
-                                                 });
-                                                },
-                                                icon: Icon(Icons.camera_alt),
+                          image == null
+                              ? UserDetail["imageUrl"] == null
+                                  ? Align(
+                                      alignment: Alignment.center,
+                                      child: CircleAvatar(
+                                          radius: 90.0,
+                                          backgroundImage: NetworkImage(
+                                              "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80"),
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                right: 5,
+                                                bottom: 5,
+                                                child: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade500,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30.0)),
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        PickImage(ImageSource
+                                                            .gallery);
+                                                      });
+                                                    },
+                                                    icon:
+                                                        Icon(Icons.camera_alt),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ],
-                                      )),
-                                )
+                                            ],
+                                          )),
+                                    )
+                                  : Align(
+                                      alignment: Alignment.center,
+                                      child: CircleAvatar(
+                                          radius: 90.0,
+                                          backgroundImage: NetworkImage(
+                                              UserDetail["imageUrl"]),
+                                          backgroundColor: Color(0xffffffff),
+                                          child: Stack(
+                                            children: [
+                                              Positioned(
+                                                right: 5,
+                                                bottom: 5,
+                                                child: Container(
+                                                  height: 40,
+                                                  width: 40,
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade500,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30.0)),
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        PickImage(ImageSource
+                                                            .gallery);
+                                                      });
+                                                    },
+                                                    icon:
+                                                        Icon(Icons.camera_alt),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                    )
                               : Align(
                                   alignment: Alignment.center,
                                   child: CircleAvatar(
-                                      radius: 90.0,
-                                      backgroundImage:
-                                          NetworkImage(UserDetail["imageUrl"]),
-                                      backgroundColor: Color(0xffffffff),
-                                      child: Stack(
-                                        children: [
-                                          Positioned(
-                                            right: 5,
-                                            bottom: 5,
-                                            child: Container(
-                                              height: 40,
-                                              width: 40,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade500,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          30.0)),
-                                              child: IconButton(
-                                                onPressed: () {
-                                                 setState(() {
-                                                   PickImage(
-                                                       ImageSource.gallery);
-                                                 });
-                                                },
-                                                icon: Icon(Icons.camera_alt),
-                                              ),
+                                    radius: 90,
+                                    backgroundImage: FileImage(
+                                      File(image!.path),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.shade500,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        30.0)),
+                                            child: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  PickImage(
+                                                      ImageSource.gallery);
+                                                });
+                                              },
+                                              icon: Icon(Icons.camera_alt),
                                             ),
                                           ),
-                                        ],
-                                      )),
-                                )
-                              : Align(
-                            alignment: Alignment.center,
-                            child: CircleAvatar(
-                              radius: 90,
-                              backgroundImage: FileImage( File(image!.path),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey.shade500,
-                                          borderRadius:
-                                          BorderRadius.circular(
-                                              30.0)),
-                                      child: IconButton(
-                                        onPressed: () {
-                                          PickImage(ImageSource.gallery);
-                                        },
-                                        icon: Icon(Icons.camera_alt),
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),),
-                          image!= null
-                              ?  Center(
-                                    child: TextButton(
-                                        onPressed: () {
-                                         setState(() {
-                                           imageSave();
-                                         });
-                                        },
-                                        child: Text(
-                                            AppLocalizations.of(context)!
-                                                .save)),
-                                  )
-
+                                ),
+                          image != null
+                              ? Center(
+                                  child: TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageSave();
+                                        });
+                                      },
+                                      child: Text(
+                                          AppLocalizations.of(context)!.save)),
+                                )
                               : Container(),
-                          const Divider(color: Colors.white,),
+                          const Divider(
+                            color: Colors.white,
+                          ),
                           InkWell(
                             onTap: () {
                               Navigator.push(

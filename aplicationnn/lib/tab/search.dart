@@ -88,7 +88,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("Askıda"),
+                          child: Text(
+                            AppLocalizations.of(context)!.hanging,
+                            style: TextStyle(color: Colors.white),
+                          ),
                         )
                       ]),
                 ),
@@ -197,9 +200,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(5),
-                                            child: Image.network(
-                                                productsList![index]
-                                                    ["imageUrl"]),
+                                            child: productsList![index]
+                                                        ["imageUrl"] ==
+                                                    null
+                                                ? Image.asset(
+                                                    "assets/askida.png")
+                                                : Image.network(
+                                                    productsList![index]
+                                                        ["imageUrl"]),
                                           ),
                                         );
                                       }),

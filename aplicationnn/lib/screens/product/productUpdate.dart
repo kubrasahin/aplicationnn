@@ -212,7 +212,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
 
     var request = http.MultipartRequest(
       'PUT',
-      Uri.parse("http://185.88.175.96/rest/product-uploadImage/$id"),
+      Uri.parse(Id + "/rest/product-uploadImage/$id"),
     );
     request.headers.addAll(headers);
     Uint8List data = await this.image!.readAsBytes();

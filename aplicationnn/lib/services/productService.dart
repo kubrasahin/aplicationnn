@@ -1,11 +1,11 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../id.dart';
 
 class ProductService {
-
 // bütün ürünleri listeleme
   static Future<Map<String, dynamic>> getProducts() async {
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
@@ -13,7 +13,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-list"),
+      Uri.parse(Id + "/rest/product-list"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -51,7 +51,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-detail/$productId"),
+      Uri.parse(Id + "/rest/product-detail/$productId"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -71,7 +71,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  +
+      Uri.parse(Id +
           "/rest/product-filter?categoryId=$categotId&subCategoryId=$subCategoryId"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -92,7 +92,7 @@ class ProductService {
     String? tokenn = token.getString('token');
     return await http.get(
       Uri.parse(
-          Id  + "/rest/product-filter?categoryId=$categoryId&subCategoryId="),
+          Id + "/rest/product-filter?categoryId=$categoryId&subCategoryId="),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -111,7 +111,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.post(
-      Uri.parse(Id  + "/rest/product-create"),
+      Uri.parse(Id + "/rest/product-create"),
       body: json.encode(body),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -131,7 +131,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-getCompany"),
+      Uri.parse(Id + "/rest/product-getCompany"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -169,7 +169,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-companyStatusTrue"),
+      Uri.parse(Id + "/rest/product-companyStatusTrue"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -188,7 +188,26 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.delete(
-      Uri.parse(Id  + "/rest/product-delete/$id"),
+      Uri.parse(Id + "/rest/product-delete/$id"),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer' + tokenn!,
+        "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
+      },
+    ).then((response) {
+      return json.decode(utf8.decode(response.bodyBytes));
+    });
+  }
+
+  // ürünü onaylama
+  static Future approvalProduct(id) async {
+    SharedPreferences basicAuth = await SharedPreferences.getInstance();
+    String? basic = basicAuth.getString('basic');
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
+    return await http.put(
+      Uri.parse(Id + "/rest/product-updateStatus/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -207,7 +226,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-search?keyWords=$text"),
+      Uri.parse(Id + "/rest/product-search?keyWords=$text"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -226,7 +245,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-getFollowCompany"),
+      Uri.parse(Id + "/rest/product-getFollowCompany"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -245,7 +264,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.post(
-      Uri.parse(Id  + "/rest/order-create"),
+      Uri.parse(Id + "/rest/order-create"),
       body: json.encode(body),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
@@ -265,7 +284,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/order-userList"),
+      Uri.parse(Id + "/rest/order-userList"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -284,7 +303,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/order-companyList"),
+      Uri.parse(Id + "/rest/order-companyList"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -303,7 +322,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/order-detail/$id"),
+      Uri.parse(Id + "/rest/order-detail/$id"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -322,7 +341,7 @@ class ProductService {
     SharedPreferences token = await SharedPreferences.getInstance();
     String? tokenn = token.getString('token');
     return await http.get(
-      Uri.parse(Id  + "/rest/product-getFollowCompany"),
+      Uri.parse(Id + "/rest/product-companyStatusFalse"),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

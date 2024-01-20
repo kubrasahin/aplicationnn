@@ -228,8 +228,6 @@ class _LoginScreenState extends State<LoginScreen>
               stops: <double>[0.151, 0.97],
             ),
           ),
-          height: MediaQuery.of(context).size.height,
-          width: double.infinity,
           decoration: BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,

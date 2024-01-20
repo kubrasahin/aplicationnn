@@ -1,14 +1,16 @@
 import 'dart:convert';
+
 import 'package:aplicationnn/screens/home.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../id.dart';
 import '../../services/chatService.dart';
 import '../../services/userService.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatPage extends StatefulWidget {
   final String chatId;
@@ -60,6 +62,7 @@ class _ChatPageState extends State<ChatPage> {
       }
     });
   }
+
   void showMessageInScaffold(messagee) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       elevation: 6.0,
@@ -140,7 +143,10 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Askıda"),
+                  child: Text(
+                    AppLocalizations.of(context)!.hanging,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               ]),
         ),
@@ -178,98 +184,99 @@ class _ChatPageState extends State<ChatPage> {
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),*/
       body: chatSenderList == null
-        ? const Center(child: CircularProgressIndicator())
-        : Form(
-        key: _formKey,
-          child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Container(
-                height: MediaQuery.sizeOf(context).height,
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                decoration: BoxDecoration(
-                    color: Color(0x33e6eefa),
-                    borderRadius: BorderRadius.circular(40)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    userDetail == null
-                        ? const Center(child: CircularProgressIndicator())
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                child: Row(
-                                  children: [
-                                    userDetail["imageUrl"] == null
-                                        ? CircleAvatar(
-                                            radius: 25,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                image: AssetImage(
-                                                  'assets/askida.png',
-                                                ),
-                                              )),
-                                            )
-                                          )
-                                        : CircleAvatar(
-                                            radius: 25,
-                                            backgroundImage: NetworkImage(
-                                                userDetail["imageUrl"]),
-                                            backgroundColor: Colors.transparent,
-                                          ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          userDetail["firstName"] +
-                                                      userDetail["lastName"] ==
-                                                  null
-                                              ? Container()
-                                              : Text(
-                                                  userDetail["firstName"] +
-                                                      '  ' +
-                                                      userDetail["lastName"],
-                                                  style: TextStyle(
-                                                    color: Color(0xffffffff),
+          ? const Center(child: CircularProgressIndicator())
+          : Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Container(
+                  height: MediaQuery.sizeOf(context).height,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                      color: Color(0x33e6eefa),
+                      borderRadius: BorderRadius.circular(40)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      userDetail == null
+                          ? const Center(child: CircularProgressIndicator())
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  child: Row(
+                                    children: [
+                                      userDetail["imageUrl"] == null
+                                          ? CircleAvatar(
+                                              radius: 25,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                  image: AssetImage(
+                                                    'assets/askida.png',
                                                   ),
-                                                )
-                                        ],
+                                                )),
+                                              ))
+                                          : CircleAvatar(
+                                              radius: 25,
+                                              backgroundImage: NetworkImage(
+                                                  userDetail["imageUrl"]),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            userDetail["firstName"] +
+                                                        userDetail[
+                                                            "lastName"] ==
+                                                    null
+                                                ? Container()
+                                                : Text(
+                                                    userDetail["firstName"] +
+                                                        '  ' +
+                                                        userDetail["lastName"],
+                                                    style: TextStyle(
+                                                      color: Color(0xffffffff),
+                                                    ),
+                                                  )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeeScreen(
-                                                currentIndex: 2,
-                                              )));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 20, bottom: 5, top: 5),
-                                  child: CircleAvatar(
-                                    radius: 20,
-                                    backgroundColor: Color(0xff5790df),
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Color(0xffffffff),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomeeScreen(
+                                                  currentIndex: 2,
+                                                )));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 20, bottom: 5, top: 5),
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Color(0xff5790df),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Color(0xffffffff),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                    Expanded(
-                      child:  chatSenderList == null
+                              ],
+                            ),
+                      Expanded(
+                        child: chatSenderList == null
                             ? Container()
                             : ListView.builder(
                                 reverse: true,
@@ -344,32 +351,30 @@ class _ChatPageState extends State<ChatPage> {
                                           ),
                                         );
                                 }),
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 5, bottom: 15),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Stack(children: [
+                            TextFormField(
+                              focusNode: focusnode,
+                              textAlignVertical: TextAlignVertical.center,
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              controller: controller,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Boş Mesaj Göndermeyiniz";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                fillColor: Color(0xffffffff),
+                                filled: true,
 
-
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 10, top: 5, bottom: 15),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Stack(children: [
-                          TextFormField(
-                            focusNode: focusnode,
-                            textAlignVertical: TextAlignVertical.center,
-                            keyboardType: TextInputType.multiline,
-                            minLines: 1,
-                            controller: controller,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Boş Mesaj Göndermeyiniz";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                            fillColor: Color(0xffffffff),
-                            filled: true,
-
-                            /*prefixIcon: IconButton(
+                                /*prefixIcon: IconButton(
                                     onPressed: () {
                                       focusnode.unfocus();
                                       focusnode.canRequestFocus = false;
@@ -381,45 +386,46 @@ class _ChatPageState extends State<ChatPage> {
                                       Icons.emoji_emotions,
                                       color: Color.fromARGB(255, 85, 53, 231),
                                     )),*/
-                            hintText: AppLocalizations.of(context)!.message,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(
-                                    color: Color(0xffffffff))),
-                            border: OutlineInputBorder(
-                                borderSide: const BorderSide(width: 1),
-                                borderRadius: BorderRadius.circular(30)),
-                          errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(color: Color(0xff5790df))),),
-                          ),
-                          Positioned(
-                              right: 0,
-                              child: InkWell(
-                                onTap:  () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    sendMessage(controller.text);
-                                  }
-
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: Color(0xff5790df),
-                                  radius: 30,
-                                  child: const Icon(
-                                    Icons.send,
-                                    color: Colors.white,
+                                hintText: AppLocalizations.of(context)!.message,
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xffffffff))),
+                                border: OutlineInputBorder(
+                                    borderSide: const BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(30)),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: const BorderSide(
+                                        color: Color(0xff5790df))),
+                              ),
+                            ),
+                            Positioned(
+                                right: 0,
+                                child: InkWell(
+                                  onTap: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      sendMessage(controller.text);
+                                    }
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: Color(0xff5790df),
+                                    radius: 30,
+                                    child: const Icon(
+                                      Icons.send,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              ))
-                        ]),
-                        // show ? emojiSelect() : Container()
-                      ),
-                    )
-                  ],
+                                ))
+                          ]),
+                          // show ? emojiSelect() : Container()
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-        ),
     );
   }
 

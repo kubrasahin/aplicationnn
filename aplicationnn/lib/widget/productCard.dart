@@ -1,12 +1,9 @@
-import 'package:aplicationnn/services/productService.dart';
 import 'package:aplicationnn/services/userService.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../screens/product/product_deall.dart';
-import '../screens/profil/profil.dart';
 
 class ProductCard extends StatefulWidget {
   final Map? productData;
@@ -21,12 +18,12 @@ class ProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<ProductCard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
- bool isProfilDetail = false,
+  bool isProfilDetail = false,
       isFollowing = false,
       isAddFollowing = false,
       isProductLoading = false;
   var UserDetail, following, addFollowing;
-   
+
   getFollowingg() async {
     await UserService.following(widget.productData!['companyId']).then((value) {
       if (mounted) {
@@ -46,7 +43,8 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   AddFollowingg() async {
-    await UserService.addFollowing(widget.productData!['companyId']).then((value) {
+    await UserService.addFollowing(widget.productData!['companyId'])
+        .then((value) {
       if (mounted) {
         setState(() {
           addFollowing = value;
@@ -98,33 +96,28 @@ class _ProductCardState extends State<ProductCard> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(3.0),
-                            child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => UseProfil(
-                                                companyId: widget
-                                                    .productData!['companyId'],
-                                              )));
-                                },
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  child: ClipOval(
-                                    child: widget.productData![
-                                                'companyImageUrl'] ==
-                                            null
-                                        ? Container()
-                                        : Container(decoration: BoxDecoration(image: DecorationImage(fit: BoxFit.cover, image: NetworkImage( widget.productData![
-                                    'companyImageUrl'],
-                                        )  )),),
-                                  ),
-                                )),
+                            child: CircleAvatar(
+                              radius: 30,
+                              child: ClipOval(
+                                child: widget.productData!['companyImageUrl'] ==
+                                        null
+                                    ? Container()
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  widget.productData![
+                                                      'companyImageUrl'],
+                                                ))),
+                                      ),
+                              ),
+                            ),
                           ),
                           Container(
                             width: 100,
                             child: FittedBox(
-                               fit: BoxFit.scaleDown,
+                              fit: BoxFit.scaleDown,
                               child: AutoSizeText(
                                 widget.productData!["companyName"],
                                 style: TextStyle(
@@ -209,84 +202,84 @@ class _ProductCardState extends State<ProductCard> {
                   ],
                 ),
               ),
-              following==false?
-              Container(
-                  decoration: BoxDecoration(
-                      color: Color(0xffffffff),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    clipBehavior: Clip.none,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                       AddFollowingg();
-                    },
-                        child: Container(
-                          padding: EdgeInsets.all(5),
-                          margin: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Color(0xffffffff)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: Text(
-                            AppLocalizations.of(context)!.follows,
-                              style: TextStyle(
-                                color: Color(0xff2b2e83),
+              following == false
+                  ? Container(
+                      decoration: BoxDecoration(
+                          color: Color(0xffffffff),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        clipBehavior: Clip.none,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              AddFollowingg();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              margin: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xffffffff)),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: Text(
+                                  AppLocalizations.of(context)!.follows,
+                                  style: TextStyle(
+                                    color: Color(0xff2b2e83),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                          left: -13,
-                          child: CircleAvatar(
-                            backgroundColor: Color(0xff2b2e83),
-                            radius: 12,
-                            child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Icon(
-                                Icons.add,
-                                color: Color(0xffffffff),
+                          Positioned(
+                              left: -13,
+                              child: CircleAvatar(
+                                backgroundColor: Color(0xff2b2e83),
+                                radius: 12,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Color(0xffffffff),
+                                  ),
+                                ),
+                              )),
+                        ],
+                      ))
+                  : InkWell(
+                      onTap: () {
+                        AddFollowingg();
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: Color(0xffffffff),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                margin: EdgeInsets.all(1),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color(0xff2b2e83)),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.beingFollowed,
+                                    style: TextStyle(
+                                      color: Color(0xffffffff),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           )),
-                    ],
-                  )):
-                  InkWell(
-                    onTap: () {
-                       AddFollowingg();
-                    },
-                    child: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xffffffff),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          margin: EdgeInsets.all(1),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color:Color(0xff2b2e83) ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                              .beingFollowed,
-                              style: TextStyle(
-                                color: Color(0xffffffff),
-                              ),
-                            ),
-                          ),
-                        ),
-                        
-                      ],
-                    )),
-                  )
+                    )
             ],
           ),
         )

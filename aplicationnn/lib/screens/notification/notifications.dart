@@ -1,5 +1,4 @@
 import 'package:aplicationnn/screens/home.dart';
-import 'package:aplicationnn/screens/notification/notificationDetay.dart';
 import 'package:aplicationnn/services/chatService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -100,7 +99,10 @@ class _NotificationPageState extends State<NotificationPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Askıda"),
+                  child: Text(
+                    AppLocalizations.of(context)!.hanging,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
               ]),
         ),
