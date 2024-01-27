@@ -45,7 +45,7 @@ class ChatServices {
   }
 
   // Tüm sohbetleri Çeken Path
-  static Future<Map<String, dynamic>> getChatAll() async {
+  static Future getChatAll() async {
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
     String? basic = basicAuth.getString('basic');
     SharedPreferences token = await SharedPreferences.getInstance();

@@ -287,12 +287,20 @@ class _StoreScreenState extends State<StoreScreen> {
                                                                 ),
                                                               )),
                                                             )
-                                                          : Image.network(
-                                                              productList![
-                                                                      index][
+                                                          :Container(
+                                                        decoration:
+                                                        BoxDecoration(
+                                                            image:
+                                                            DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image:
+                                                              NetworkImage(
+                                                                  productList![
+                                                                  index][
                                                                   'companyImageUrl'],
-                                                              fit:
-                                                                  BoxFit.cover),
+                                                              ),
+                                                            )),
+                                                      )
                                                     ),
                                                   )),
                                             ),

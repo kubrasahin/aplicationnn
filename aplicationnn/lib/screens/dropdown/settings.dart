@@ -75,8 +75,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     if (res.statusCode == 200) {
       showMessageInScaffoldTwo(AppLocalizations.of(context)!.exitSuccessful);
+
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const LoginScreen()));
+      await token.remove("token")  ;
+      print("EWWRTTTTTTTTTTTTTTTTTTTTTT");
+      print(token);
     } else {
       showMessageInScaffoldTwo(AppLocalizations.of(context)!.notSignedOut);
       Navigator.pop(context);

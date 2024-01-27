@@ -352,4 +352,22 @@ class ProductService {
       return json.decode(utf8.decode(response.bodyBytes));
     });
   }
+  // Sipariş Detay
+  static Future<Map<String, dynamic>> getOrderDetay(id) async {
+    SharedPreferences basicAuth = await SharedPreferences.getInstance();
+    String? basic = basicAuth.getString('basic');
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
+    return await http.get(
+      Uri.parse(Id + "/rest/order-detail/$id"),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer' + tokenn!,
+        "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
+      },
+    ).then((response) {
+      return json.decode(utf8.decode(response.bodyBytes));
+    });
+  }
 }

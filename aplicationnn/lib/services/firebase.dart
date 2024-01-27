@@ -23,7 +23,7 @@ class FirebaseService{
   static Future setupOneSignal( )async{
 
  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-   OneSignal.shared.setAppId("a4a02210-b946-4de4-9aaf-8a5c8ded7f49");
+   OneSignal.shared.setAppId("252114c9-9268-4c06-9841-f7b3bb31c0ab");
 OneSignal.shared
         .promptUserForPushNotificationPermission() // kullanıcıdan izin al
         .then((accepted) {

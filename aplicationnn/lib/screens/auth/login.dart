@@ -96,6 +96,8 @@ class _LoginScreenState extends State<LoginScreen>
         body: jsonEncode(body));
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
+      print("playerIddDDDDDDDDDDDDDDDDDDD");
+      print(playerIdd);
     } else {
       showMessageInScaffold(
           " AppLocalizations.of(context)!.errorOccurredOnUpdate");
@@ -124,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen>
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json',
             "Access-Control-Allow-Headers":
-                "Access-Control-Allow-Origin, Accept",
+            "Access-Control-Allow-Origin, Accept",
           },
           body: jsonEncode(body));
       var response = json.encode(res.body);
@@ -137,34 +139,10 @@ class _LoginScreenState extends State<LoginScreen>
         print("TOKENNNNNNN");
         sendPlayerId();
         print(response);
-        var res = await http.get(
-          Uri.parse(Id + "/rest/get-role"),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Accept': 'application/json',
-            "Access-Control-Allow-Headers":
-                "Access-Control-Allow-Origin, Accept",
-          },
-        );
-        var ress = json.encode(res.body);
-        SharedPreferences rol = await SharedPreferences.getInstance();
-        rol.setString('rol', res.body);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeeScreen()));
 
-        if (res.body == "ADMIN") {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AdminHomeeScreen(
-                        currentIndex: 0,
-                      )));
-        } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => HomeeScreen(
-                        currentIndex: 0,
-                      )));
-        }
+
       } else {
         showMessageInScaffold(AppLocalizations.of(context)!.userNotFound);
       }
@@ -184,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen>
               TextButton(
                   style: ButtonStyle(
                     foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
+                    MaterialStateProperty.all<Color>(Colors.black),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -218,128 +196,130 @@ class _LoginScreenState extends State<LoginScreen>
       },
       child: Scaffold(
           body: Form(
-        child: SingleChildScrollView(
-            child: Container(
-          foregroundDecoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment(0, 1),
-              end: Alignment(-0, 0),
-              colors: <Color>[Color(0xff000000), Color.fromARGB(0, 15, 12, 12)],
-              stops: <double>[0.151, 0.97],
-            ),
-          ),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(
-                'assets/giris.png',
-              ),
-            ),
-          ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 30),
-                        child: DropdownButton<Language>(
-                          underline: const SizedBox(),
-                          icon: const Icon(
-                            Icons.language,
-                            color: Colors.white,
-                          ),
-                          onChanged: (Language? language) async {
-                            if (language != null) {
-                              Locale _locale =
-                                  await setLocale(language.languageCode);
-                              MyApp.setLocale(context, _locale);
-                            }
-                          },
-                          items: Language.languageList()
-                              .map<DropdownMenuItem<Language>>(
-                                (e) => DropdownMenuItem<Language>(
-                                  value: e,
-                                  child: Row(
-                                    mainAxisAlignment:
+            child: SingleChildScrollView(
+                child: Container(
+                  foregroundDecoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(0, 1),
+                      end: Alignment(-0, 0),
+                      colors: <Color>[Color(0xff000000), Color.fromARGB(0, 15, 12, 12)],
+                      stops: <double>[0.151, 0.97],
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                        'assets/giris.png',
+                      ),
+                    ),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 30),
+                                child: DropdownButton<Language>(
+                                  underline: const SizedBox(),
+                                  icon: const Icon(
+                                    Icons.language,
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (Language? language) async {
+                                    if (language != null) {
+                                      Locale _locale =
+                                      await setLocale(language.languageCode);
+                                      MyApp.setLocale(context, _locale);
+                                    }
+                                  },
+                                  items: Language.languageList()
+                                      .map<DropdownMenuItem<Language>>(
+                                        (e) => DropdownMenuItem<Language>(
+                                      value: e,
+                                      child: Row(
+                                        mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
-                                    children: <Widget>[
-                                      Text(
-                                        e.flag,
-                                        style: const TextStyle(fontSize: 30),
+                                        children: <Widget>[
+                                          Text(
+                                            e.flag,
+                                            style: const TextStyle(fontSize: 30),
+                                          ),
+                                          Text(e.name)
+                                        ],
                                       ),
-                                      Text(e.name)
-                                    ],
+                                    ),
+                                  )
+                                      .toList(),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Container(
+                          // group48kgw (2:25)
+
+                          width: double.infinity,
+                          height: 164 * fem,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                // imageT5Z (2:2)
+
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    width: 202 * fem,
+                                    height: 136 * fem,
+                                    child: Image.asset(
+                                      'assets/image.png',
+                                    ),
                                   ),
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  // group48kgw (2:25)
-
-                  width: double.infinity,
-                  height: 164 * fem,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        // imageT5Z (2:2)
-
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 202 * fem,
-                            height: 136 * fem,
-                            child: Image.asset(
-                              'assets/image.png',
-                            ),
+                              ),
+                              Positioned(
+                                // askdak4f (2:3)
+                                left: 54 * fem,
+                                top: 125 * fem,
+                                child: Align(
+                                  child: SizedBox(
+                                    width: 94 * fem,
+                                    height: 39 * fem,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      Positioned(
-                        // askdak4f (2:3)
-                        left: 54 * fem,
-                        top: 125 * fem,
-                        child: Align(
-                          child: SizedBox(
-                            width: 94 * fem,
-                            height: 39 * fem,
-                          ),
-                        ),
-                      ),
-                    ],
+                        buildMobileNumberTextField(),
+                        buildPasswordTextField(),
+                        buildLoginButton(),
+                        InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const NumberPage()));
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.forgotMyPassword,
+                              style: TextStyle(color: Colors.white),
+                            )),
+                        buildRowRegister()
+                      ],
+                    ),
                   ),
-                ),
-                buildMobileNumberTextField(),
-                buildPasswordTextField(),
-                buildLoginButton(),
-                InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const NumberPage()));
-                    },
-                    child: Text(
-                      AppLocalizations.of(context)!.forgotMyPassword,
-                      style: TextStyle(color: Colors.white),
-                    )),
-                buildRowRegister()
-              ],
-            ),
-          ),
-        )),
-      )),
+                )),
+          )),
     );
   }
 
@@ -384,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen>
               contentPadding: EdgeInsets.all(5.0),
               hintText: AppLocalizations.of(context)!.phoneNumber,
               hintStyle:
-                  const TextStyle(color: Color(0xff8c8c8c), fontSize: 16),
+              const TextStyle(color: Color(0xff8c8c8c), fontSize: 16),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(

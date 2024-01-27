@@ -20,7 +20,7 @@ class ProductDeal extends StatefulWidget {
 }
 
 class _ProductDealState extends State<ProductDeal> {
-  var productDetail;
+  var productDetail, orderDetail;
 
   String? variantUnit, variantId, currency, description;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -64,7 +64,8 @@ class _ProductDealState extends State<ProductDeal> {
         body: jsonEncode(buyNowProduct));
     var response = json.encode(res.body);
     if (res.statusCode == 200) {
-      showSnackbar("Ürünü Aldınız Kodunuz:2323232321");
+     orderDetaill();
+     showSnackbar2(orderDetail["orderId"]);
     } else if (res.statusCode == 400) {
       showMessageInScaffold(
           AppLocalizations.of(context)!.youCannoBuyYourOwnProduct);
@@ -78,7 +79,22 @@ class _ProductDealState extends State<ProductDeal> {
       showMessageInScaffold(AppLocalizations.of(context)!.error);
     }
   }
-
+  orderDetaill()async{
+    await ProductService.getOrderDetay(widget.productID).then((value) {
+      if (mounted) {
+        setState(() {
+          orderDetail = value;
+          print(orderDetail);
+        });
+      }
+    }).catchError((error) {
+      if (mounted) {
+        setState(() {
+          isProductDetails = false;
+        });
+      }
+    });
+  }
   void showMessageInScaffold(messagee) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       elevation: 6.0,
@@ -144,7 +160,6 @@ class _ProductDealState extends State<ProductDeal> {
           );
         });
   }
-
   void showSnackbar2(message) {
     showDialog(
         context: context,
@@ -155,21 +170,28 @@ class _ProductDealState extends State<ProductDeal> {
             ),
             actions: <Widget>[
               Container(
-                color: const Color.fromARGB(255, 230, 36, 102),
-                child: TextButton(
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(AppLocalizations.of(context)!.close)),
+                decoration: BoxDecoration(
+                    color: Color(0xffef6328),
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextButton(
+                      style: ButtonStyle(
+                        foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(AppLocalizations.of(context)!.yes)),
+                ),
               )
             ],
           );
         });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -366,7 +388,7 @@ class _ProductDealState extends State<ProductDeal> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: InkWell(
-                          onTap: () {
+                          onTap: ()  {
                             showSnackbar(AppLocalizations.of(context)!
                                 .doYouWantToBuyTheProductYou);
                           },

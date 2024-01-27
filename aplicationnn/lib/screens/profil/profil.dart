@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:aplicationnn/screens/product/productAddTwo.dart';
 import 'package:aplicationnn/screens/product/product_deall.dart';
 import 'package:aplicationnn/services/productService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import '../../id.dart';
 import '../../services/userService.dart';
 
 class UseProfil extends StatefulWidget {
@@ -19,9 +23,11 @@ class _UseProfilState extends State<UseProfil> {
   bool isProfilDetail = false,
       isFollowing = false,
       isAddFollowing = false,
-      isProductLoading = false;
+      isProductLoading = false, isbuttonflowaktive=true;
   var UserDetail, following, addFollowing;
   List? productList;
+  TextEditingController title =TextEditingController();
+  TextEditingController contents =TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -108,6 +114,97 @@ class _UseProfilState extends State<UseProfil> {
     });
   }
 
+  sendCompilation(titlee, icerik)async{
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
+    print(token);
+    Map body = {
+      "title":titlee,
+      "request": icerik,
+      "complainedId":widget.companyId
+
+    };
+    var res = await http.post(
+        Uri.parse(Id  + "/rest/complaint-create"),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
+          'Authorization': 'Bearer' + tokenn!,
+        },
+        body: jsonEncode(body));
+    var response = json.encode(res.body);
+    print(res.statusCode);
+    if (res.statusCode == 200) {
+      showMessageInScaffold(AppLocalizations.of(context)!.yourComPlaintHasBeenForwarded);
+    }  else {
+      showMessageInScaffold(AppLocalizations.of(context)!.error);
+    }
+
+  }
+  void showMessageInScaffold(messagee) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      elevation: 6.0,
+      backgroundColor: Color(0xffef6328),
+      behavior: SnackBarBehavior.floating,
+      content: Text(
+        messagee,
+        style: TextStyle(color: Colors.white),
+      ),
+      action: SnackBarAction(
+          textColor: Color(0xffffffff),
+          label: AppLocalizations.of(context)!.close,
+          onPressed: () {}),
+    ));
+  }
+
+  void showSnackbar(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Center(child: Text(AppLocalizations.of(context)!.complainBox)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              TextFormField(
+                controller: title,
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.complainTitle,
+                ),
+              ),
+              SizedBox(height: 16), // Boşluk eklemek için
+
+              TextFormField(
+               controller: contents,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context)!.complainContent,
+                ),
+              ),
+              SizedBox(height: 16), // Boşluk eklemek için
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xffef6328),// Button rengini turuncu yapar
+                ),
+                onPressed: () async{
+                  // Gönder butonuna basıldığında yapılacak işlemler
+                  // Bu örnekte sadece konsola yazdırıyoruz
+                 await sendCompilation( title.text, contents.text);
+                 Navigator.pop(context); // Dialog penceresini kapat
+                },
+                child: Text(AppLocalizations.of(context)!.sendd),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return UserDetail == null || following == null || productList == null
@@ -133,6 +230,19 @@ class _UseProfilState extends State<UseProfil> {
                             'assets/giris.png',
                           ),
                         )),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        onTap: (){
+                          showSnackbar(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 10),
+                          child: Text(AppLocalizations.of(context)!.complain, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18
+                          )),
+                        ),
+                      ),
+                    ),
                   ),
                   Stack(
                     clipBehavior: Clip.none,
@@ -362,9 +472,12 @@ class _UseProfilState extends State<UseProfil> {
                                                       vertical: 10),
                                               child: TextButton(
                                                   onPressed: () {
-                                                    AddFollowingg();
+                                                    setState(() {
+                                                      isbuttonflowaktive==false;
+                                                      AddFollowingg();
+                                                    });
                                                   },
-                                                  child: Text(
+                                                  child:isbuttonflowaktive == false? CircularProgressIndicator(): Text(
                                                     AppLocalizations.of(
                                                             context)!
                                                         .follows,
@@ -394,9 +507,14 @@ class _UseProfilState extends State<UseProfil> {
                                                       vertical: 10),
                                               child: TextButton(
                                                   onPressed: () {
-                                                    AddFollowingg();
+
+                                                   setState(() {
+                                                     isbuttonflowaktive==false;
+                                                     AddFollowingg();
+
+                                                   });
                                                   },
-                                                  child: Text(
+                                                  child:isbuttonflowaktive==false ? CircularProgressIndicator():  Text(
                                                     AppLocalizations.of(
                                                             context)!
                                                         .beingFollowed,
@@ -436,7 +554,9 @@ class _UseProfilState extends State<UseProfil> {
                                               );
                                             },
                                             child: Text(
-                                              "Ürün Askıla",
+                                                AppLocalizations.of(
+                                                    context)!
+                                                    .hangProduct,
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontFamily: "Poppins",

@@ -40,7 +40,7 @@ class _OtpScreenState extends State<OtpScreen> {
         },
         body: jsonEncode(body));
     var response = json.encode(res.body);
-    if (res.body == "Your phone number has been successfully verified! " ||
+    if (res.body == "Your phone number has been successfully verified! " &&
         widget.institutional == true) {
       showMessageInScaffold(
           "Admine kayıtınız iletilmiştir Onayını Beklemelisiniz");

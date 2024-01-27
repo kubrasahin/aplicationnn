@@ -24,34 +24,45 @@ class _ChatAllState extends State<ChatAll> {
   bool ischatLoading = false;
   List? chatList, chatTwoList;
   bool isSwitched = false;
+  var ress;
 
   get id => chatList![selectedIndex!]['receiverId'];
 
   @override
   void initState() {
-    super.initState();
+    getid();
     getChats();
+    super.initState();
+  }
+
+  getid() async{
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
+    var res = await http.get(
+      Uri.parse(Id + "/rest/get-role"),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        "Access-Control-Allow-Headers":
+        "Access-Control-Allow-Origin, Accept",
+        'Authorization': 'Bearer' + tokenn!,
+      },
+    );
+    ress = json.encode(res.body);
+    print("PRINTTTTTTT");
+    print(ress);
   }
 
   getChats() async {
+    SharedPreferences idd = await SharedPreferences.getInstance();
+    String? iddd = idd.getString('id');
+    print(iddd);
     await ChatServices.getChatAll().then((onValue) {
       if (mounted) {
         setState(() {
-          chatList = onValue['results'];
+          chatList = onValue;
           print("++++++MESAJLARRRRRRRRRRRRRR+++++++++++++");
           print(chatList);
-          for (int i = 0; i < chatList!.length; i++) {
-            for (int a = 0; a < chatList!.length; a++) {
-              if (chatList![i]['_id']['receiverId'] ==
-                  chatList![a]['_id']['senderId']) {
-                chatTwoList = chatList![a];
-                print("fcccccccccccc");
-                print(chatList![i]['_id']['receiverId']);
-              } else {}
-            }
-          }
-          print("İİNCİ LİSTEEEEEEEEEEEEE");
-          print(chatTwoList);
           ischatLoading = true;
         });
       }
@@ -244,9 +255,11 @@ class _ChatAllState extends State<ChatAll> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => ChatPage(
+                                              builder: (context) =>  chatList![index]['senderId']!=ress ?ChatPage(
                                                   chatId: chatList![index]
-                                                      ['senderId'])));
+                                                      ['receiverId']): ChatPage(
+                                                  chatId: chatList![index]
+                                                  ['senderId'])) );
                                     },
                                     child: Column(
                                       children: [
@@ -279,10 +292,16 @@ class _ChatAllState extends State<ChatAll> {
                                                   })
                                             ],
                                           ),
+
                                           child: Container(
                                             height: 70,
                                             child: ListTile(
-                                              title: Text(
+                                              title:  chatList![index]['senderId']!=ress ?Text(
+                                  chatList![index]['receiverName'],
+                                  style: TextStyle(
+                                  color: Color(0xffffffff),
+                                  ),
+                                  ):Text(
                                                 chatList![index]['senderName'],
                                                 style: TextStyle(
                                                   color: Color(0xffffffff),

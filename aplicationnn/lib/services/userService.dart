@@ -227,4 +227,24 @@ class UserService {
       return json.decode(utf8.decode(response.bodyBytes));
     });
   }
+  // Kullanıcı Şikayeti
+  static Future sendComplationss(body) async {
+    SharedPreferences basicAuth = await SharedPreferences.getInstance();
+    String? basic = basicAuth.getString('basic');
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
+    return await http.post(
+      Uri.parse(Id  + "/rest/complaint-create"),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer' + tokenn!,
+        "Access-Control-Allow-Headers": "Access-Control-Allow-Origin, Accept",
+      },
+
+    ).then((response) {
+      return json.decode(utf8.decode(response.bodyBytes));
+    });
+  }
 }

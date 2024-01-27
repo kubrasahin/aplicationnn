@@ -187,27 +187,20 @@ class _ProductUpdateState extends State<ProductUpdate> {
       if (image != null) {
         setState(() {
           selectedFileName = image!.path;
-          print(image!.name);
-          print("++++++++++++");
-          print(image);
         });
       }
-      ;
-
-      final imageTempo = File(image!.path);
-      // setState(() => this.image = imageTempo as XFile?);
-    } on PlatformException catch (e) {
-      image = productDetail["imageUrl"];
-      print(image);
-    }
+    } on PlatformException catch (e) {}
   }
 
   imageSave() async {
+    SharedPreferences token = await SharedPreferences.getInstance();
+    String? tokenn = token.getString('token');
     SharedPreferences basicAuth = await SharedPreferences.getInstance();
     String? basic = basicAuth.getString('basic');
-
+    print(tokenn);
     var headers = {
-      'Authorization': basic!,
+      'Content-Type': 'multipart/form-data; charset=UTF-8',
+      'Authorization': 'Bearer' + tokenn!,
     };
 
     var request = http.MultipartRequest(
@@ -319,6 +312,7 @@ class _ProductUpdateState extends State<ProductUpdate> {
                         padding: const EdgeInsets.all(8.0),
                         child: ListView(
                           children: [
+                            image == null ?
                             productDetail["imageUrl"] != null
                                 ? Align(
                                     alignment: Alignment.center,
@@ -391,7 +385,45 @@ class _ProductUpdateState extends State<ProductUpdate> {
                                             ),
                                           ],
                                         )),
-                                  ),
+                                  ) : Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:FileImage(
+                                          File(image!.path),
+                                        ),
+                                      ),
+                                      borderRadius:
+                                      BorderRadius.circular(20)),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey.shade500,
+                                              borderRadius:
+                                              BorderRadius.circular(
+                                                  30.0)),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              PickImage(
+                                                  ImageSource.gallery);
+                                            },
+                                            icon: Icon(Icons.camera_alt),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+
                             SizedBox(
                               height: 20,
                             ),

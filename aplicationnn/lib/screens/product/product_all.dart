@@ -25,14 +25,13 @@ class _ProductAllState extends State<ProductAll> {
   int? productsPerPage = 12,
       productsPageNumber = 0,
       totalProducts = 1,
-      selectedSubCategoryIndex;
+      selectedSubCategoryIndex=0;
   String? currency;
   List? productsList, subCategoryList;
 
   @override
   void initState() {
     getCategoryIdSubCategoryList();
-    getProductsList();
     methodCallsInitiate();
 
     super.initState();
@@ -40,9 +39,13 @@ class _ProductAllState extends State<ProductAll> {
 
   methodCallsInitiate() {
     if (selectedSubCategoryIndex == 0) {
-      getProductsList();
+     setState(() {
+       getProductsList();
+     });
     } else {
-      getProductsSubCategoryId();
+      setState(() {
+        getProductsSubCategoryId();
+      });
     }
   }
 
@@ -137,6 +140,7 @@ class _ProductAllState extends State<ProductAll> {
                       child: subCategoryList == null
                           ? const Center(child: CircularProgressIndicator())
                           : DefaultTabController(
+
                               length: subCategoryList!.length + 1,
                               child: Container(
                                 width: MediaQuery.of(context).size.width,
@@ -154,18 +158,21 @@ class _ProductAllState extends State<ProductAll> {
                                   onTap: (index) {
                                     setState(() {
                                       selectedSubCategoryIndex = index;
+                                      methodCallsInitiate();
                                     });
-                                    methodCallsInitiate();
+
                                   },
                                   tabs: new List<Widget>.generate(
                                     subCategoryList!.length + 1,
                                     (int index) {
                                       return index != 0
                                           ? Tab(
+                                        key: UniqueKey(),
                                               text: subCategoryList![index - 1]
                                                   ['title'],
                                             )
                                           : Tab(
+                                        key: UniqueKey(),
                                               text:
                                                   AppLocalizations.of(context)!
                                                       .all);
